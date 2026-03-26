@@ -33,9 +33,14 @@ public class TopicMapper {
                 .publishedAt(topic.getPublishedAt())
                 .createdAt(topic.getCreatedAt())
                 .updatedAt(topic.getUpdatedAt())
-                .authorName(topic.getUser().getName())
+
+                .authorId(topic.getUser().getId())
                 .authorUsername(topic.getUser().getUsername())
+                .authorName(topic.getUser().getName())
+
+                .collectionId(topic.getCollection().getId())
                 .collectionName(topic.getCollection().getName())
+
                 .build();
     }
 }

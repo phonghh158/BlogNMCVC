@@ -41,7 +41,7 @@ public class Topic {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Collection collection;
 
-    @Column(name = "title", length = 256, nullable = false)
+    @Column(name = "title", length = 512, nullable = false)
     private String title;
 
     @Column(name = "slug", length = 128, nullable = false, unique = true)
@@ -50,7 +50,7 @@ public class Topic {
     @Column(name = "content", columnDefinition = "LONGTEXT", nullable = false)
     private String content;
 
-    @Column(name = "thumbnail", length = 256)
+    @Column(name = "thumbnail", length = 1024)
     private String thumbnail;
 
     @Enumerated(EnumType.STRING)

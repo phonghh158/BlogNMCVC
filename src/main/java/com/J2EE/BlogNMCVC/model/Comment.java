@@ -23,7 +23,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class Comment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcTypeCode(SqlTypes.CHAR)
@@ -32,7 +31,7 @@ public class Comment {
 
     @JdbcTypeCode(SqlTypes.CHAR)
     @JoinColumn(name = "topic_id", nullable = false)
-    private User topic;
+    private Topic topic;
 
     @JdbcTypeCode(SqlTypes.CHAR)
     @JoinColumn(name = "user_id", nullable = false)

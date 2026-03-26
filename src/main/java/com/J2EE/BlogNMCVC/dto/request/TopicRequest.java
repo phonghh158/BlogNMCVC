@@ -10,19 +10,18 @@ import lombok.Setter;
 import java.util.UUID;
 
 @Getter
-@Setter
 public class TopicRequest {
     @NotNull(message = "Collection id is required")
     private UUID collectionId;
 
     @NotBlank(message = "Title is required")
-    @Size(max = 256, message = "Title must be less than or equal to 256 characters")
+    @Size(max = 512, message = "Title must be less than or equal to 512 characters")
     private String title;
 
     @NotBlank(message = "Content is required")
     private String content;
 
-    @Size(max = 256, message = "Thumbnail must be less than or equal to 256 characters")
+    @Size(max = 1024, message = "Thumbnail must be less than or equal to 1024 characters")
     private String thumbnail;
 
     @NotNull(message = "Status is required")
