@@ -3,6 +3,7 @@ package com.J2EE.BlogNMCVC.dto.response;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.J2EE.BlogNMCVC.constant.AuthorReaction;
 import lombok.*;
 
 @Getter
@@ -12,8 +13,8 @@ import lombok.*;
 @Builder
 public class CommentResponse {
     private UUID id;
-    private UUID parentId;
     private String content;
+    private AuthorReaction authorReaction;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;

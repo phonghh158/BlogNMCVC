@@ -15,8 +15,4 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
     Page<Comment> findAllByUser(User user, Pageable pageable);
 
     Page<Comment> findAllByTopic(Topic topic, Pageable pageable);
-
-    Page<Comment> findAllByParentId(UUID parentId, Pageable pageable);
-
-    Comment findByUserAndTopicAndParentId(User user, Topic topic, UUID parentId);
 }

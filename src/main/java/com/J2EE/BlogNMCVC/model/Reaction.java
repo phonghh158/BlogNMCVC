@@ -31,7 +31,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class Reaction {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @JdbcTypeCode(SqlTypes.CHAR)
@@ -48,8 +47,8 @@ public class Reaction {
     private Topic topic;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", length = 16, nullable = false)
-    private ReactionType type;
+    @Column(name = "reaction_type", length = 16, nullable = false)
+    private ReactionType reactionType;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

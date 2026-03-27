@@ -9,12 +9,15 @@ import com.J2EE.BlogNMCVC.model.Topic;
 import com.J2EE.BlogNMCVC.model.User;
 import com.J2EE.BlogNMCVC.repository.CollectionRepository;
 import com.J2EE.BlogNMCVC.repository.TopicRepository;
+import com.J2EE.BlogNMCVC.repository.UserRepository;
 import com.J2EE.BlogNMCVC.utils.SlugUtils;
+import com.J2EE.BlogNMCVC.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,7 +32,7 @@ public class TopicService {
     private TopicMapper topicMapper;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
     private CollectionRepository collectionRepository;
@@ -40,7 +43,8 @@ public class TopicService {
 
         slug = SlugUtils.toUniqueSlug(topicRepository.existsBySlug(slug), slug, LocalDateTime.now());
 
-        User user = userService.getCurrentUser();
+        User user = userRepository.findById(UserUtils.getCurrentUserId())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Collection collection = collectionRepository
                 .findById(req.getCollectionId())

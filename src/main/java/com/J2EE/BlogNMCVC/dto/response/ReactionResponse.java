@@ -17,7 +17,7 @@ import java.util.UUID;
 @Builder
 public class ReactionResponse {
     private UUID id;
-    private ReactionType type;
+    private ReactionType reactionType;
     private LocalDateTime createdAt;
 
     private UUID userId;

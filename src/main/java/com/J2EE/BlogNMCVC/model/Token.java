@@ -38,8 +38,8 @@ public class Token {
     private String hashedToken;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 32)
-    private TokenType type;
+    @Column(name = "token_type", nullable = false, length = 32)
+    private TokenType tokenType;
 
     @Column(name = "expired_at", nullable = false)
     private LocalDateTime expiredAt;

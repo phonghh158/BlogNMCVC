@@ -3,6 +3,8 @@ package com.J2EE.BlogNMCVC.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.J2EE.BlogNMCVC.constant.AuthorReaction;
+import com.J2EE.BlogNMCVC.constant.TokenType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -37,12 +39,12 @@ public class Comment {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @JdbcTypeCode(SqlTypes.CHAR)
-    @Column(name = "parent_id", length = 36)
-    private UUID parentId;
-
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "author_reation", length = 32)
+    private AuthorReaction authorReaction;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

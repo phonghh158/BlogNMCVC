@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+<footer th:fragment="footer">
+    <p class="copyright">
+        ©2026 Nhà, mây, cá và cây. All rights reserved.
+        <br />
+        Blog được chăm chút bởi
+        <a th:href="@{/about-me}" class="owner-name" id="owner-name">Bách Chi</a>
+        với tất cả tình yêu.
+        <br />
+        Website được phát triển bởi
+        <a href="#" class="dev-name" id="dev-name">phonghh158</a>.
+    </p>
+
+    <div class="owner-social-link">
+        <a href="https://www.facebook.com/nhacohyun" class="social-link" id="owner-facebook">
+            <img th:src="@{/images/pic/social/facebook.png}" alt="facebook" />
+        </a>
+
+        <a href="#" class="social-link" id="owner-instagram">
+            <img th:src="@{/images/pic/social/instagram.png}" alt="instagram" />
+        </a>
+
+        <a href="#" class="social-link" id="owner-spotify">
+            <img th:src="@{/images/pic/social/spotify.png}" alt="spotify" />
+        </a>
+    </div>
+</footer>
+</body>
+</html>

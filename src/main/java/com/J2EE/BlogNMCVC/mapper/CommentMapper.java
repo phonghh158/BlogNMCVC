@@ -13,7 +13,6 @@ public class CommentMapper {
         return Comment.builder()
                 .topic(topic)
                 .user(user)
-                .parentId(req.getParentId())
                 .content(req.getContent())
                 .build();
     }
@@ -21,8 +20,8 @@ public class CommentMapper {
     public CommentResponse toResponse(Comment comment) {
         return CommentResponse.builder()
                 .id(comment.getId())
-                .parentId(comment.getParentId())
                 .content(comment.getContent())
+                .authorReaction(comment.getAuthorReaction())
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
                 .deletedAt(comment.getDeletedAt())

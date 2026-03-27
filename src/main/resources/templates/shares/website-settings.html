@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="websiteSettings" class="website-settings" id="website-settings">
+    <div class="setting theme" id="theme">
+        <div class="setting-icon" id="theme-icon">
+            <span class="material-symbols-rounded" id="icon-dark">moon_stars</span>
+            <span class="material-symbols-rounded" id="icon-light">light_mode</span>
+        </div>
+
+        <div class="theme-toggle" id="theme-toggle">
+            <div class="toggle-background">
+                <img th:src="@{/images/pic/toggle-bg-dark.jpg}" alt="" id="toggle-bg-dark" />
+                <img th:src="@{/images/pic/toggle-bg-light.jpg}" alt="" id="toggle-bg-light" />
+            </div>
+
+            <div class="toggle-circle" id="theme-toggle-circle">
+                <span class="material-symbols-rounded" id="toggle-circle-dark">dark_mode</span>
+                <span class="material-symbols-rounded" id="toggle-circle-light">light_mode</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="setting language" id="language">
+        <div class="setting-icon">
+            <span class="material-symbols-rounded">language</span>
+        </div>
+
+        <div class="language-list" id="language-list">
+            <div class="toggle-circle" id="language-toggle-circle"></div>
+            <span class="language-option" id="english">En</span>
+            <span class="language-option active" id="vietnamese">Vi</span>
+            <span class="language-option" id="korean">Ko</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

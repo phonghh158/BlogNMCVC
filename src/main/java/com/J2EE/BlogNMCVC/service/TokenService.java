@@ -22,7 +22,7 @@ public class TokenService {
 
         Token token = Token.builder()
                 .hashedToken(hashedToken)
-                .type(tokenType)
+                .tokenType(tokenType)
                 .user(user)
                 .expiredAt(LocalDateTime.now().plusMinutes(exp))
                 .build();
@@ -43,7 +43,7 @@ public class TokenService {
             throw new IllegalArgumentException("Token has expired");
         }
 
-        if (token.getType() != tokenType) {
+        if (token.getTokenType() != tokenType) {
             throw new IllegalArgumentException("Invalid token type");
         }
 

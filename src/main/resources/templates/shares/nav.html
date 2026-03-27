@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav th:fragment="nav" class="collapsed authenticated" id="side-bar">
+    <ul class="logo">
+        <a th:href="@{/}" class="logo-link">
+            <img class="image" th:src="@{/images/logo/nmcvc.png}" alt="logo" />
+            <span class="text">Nhà</span>
+        </a>
+    </ul>
+
+    <ul class="menu">
+        <a th:href="@{/}" class="menu-link">
+            <span class="material-symbols-rounded">home</span>
+            <span class="text">Home</span>
+        </a>
+        <a th:href="@{/collections}" class="menu-link">
+            <span class="material-symbols-rounded">newsstand</span>
+            <span class="text">Collections</span>
+        </a>
+        <a th:href="@{/topics}" class="menu-link">
+            <span class="material-symbols-rounded">news</span>
+            <span class="text">Topics</span>
+        </a>
+        <a href="#" class="menu-link">
+            <span class="material-symbols-rounded">search</span>
+            <span class="text">Explore</span>
+        </a>
+        <a href="#" class="menu-link">
+            <span class="material-symbols-rounded">notifications</span>
+            <span class="text">Notifications</span>
+        </a>
+    </ul>
+
+    <ul class="login">
+        <a th:href="@{/auth}" class="login-link" id="login-button">
+            <span class="material-symbols-rounded">assignment_ind</span>
+            <span class="text">Login/Register &ThinSpace;</span>
+        </a>
+    </ul>
+
+    <ul class="personal">
+        <div class="dropdown-content" id="personal-content">
+            <a href="#" class="personal-link" id="personal-page-button">
+                <span class="material-symbols-rounded">person</span>
+                <span class="text">Personal Page</span>
+            </a>
+            <a href="#" class="personal-link" id="logout-button">
+                <span class="material-symbols-rounded">logout</span>
+                <span class="text">Logout</span>
+            </a>
+        </div>
+
+        <div class="dropdown-button" id="personal-button">
+            <img th:src="@{/images/user/m.jpg}" alt="personal-avatar" />
+            <span class="text">@Username</span>
+        </div>
+    </ul>
+
+    <div class="expand-nav-button" id="expand-nav-button">
+        <span class="material-symbols-rounded">right_panel_close</span>
+    </div>
+
+    <div class="collapse-nav-button" id="collapse-nav-button">
+        <span class="material-symbols-rounded">arrow_menu_close</span>
+    </div>
+</nav>
+</body>
+</html>

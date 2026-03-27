@@ -5,6 +5,7 @@ import com.J2EE.BlogNMCVC.dto.response.UserResponse;
 import com.J2EE.BlogNMCVC.mapper.UserMapper;
 import com.J2EE.BlogNMCVC.model.User;
 import com.J2EE.BlogNMCVC.repository.UserRepository;
+import com.J2EE.BlogNMCVC.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,18 +27,19 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public UserResponse getMe() {
+        UUID id = UserUtils.getCurrentUserId();
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
 
-    public User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userMapper.toUserResponse(user);
+    }
 
-        if (authentication == null || authentication.getName() == null) {
-            throw new IllegalStateException("Unauthenticated user");
-        }
+    public UserResponse getUserById(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + id));
 
-        UUID userId = UUID.fromString(authentication.getName());
-
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return userMapper.toUserResponse(user);
     }
 
     public UserResponse getUserByUsername(String username) {
