@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html
         lang="vi"
         xmlns:th="http://www.thymeleaf.org"
@@ -7,12 +7,12 @@
 >
 <head>
     <title>Trang chủ</title>
-    <link rel="stylesheet" th:href="@{/css/homepage.css}" />
+
+    <th:block layout:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/homepage.css}" />
+    </th:block>
 </head>
-
 <body>
-<span layout:fragment="pageName">Trang chủ</span>
-
 <main layout:fragment="content">
     <div class="homepage-nav" id="homepage-navigation">
         <ul class="menu">
@@ -41,7 +41,7 @@
 
     <section class="home-section" id="home">
         <div class="home-banner">
-            <img th:src="@{/images/pic/homepage/banner.png}" alt="hero-banner" />
+            <img th:src="@{/images/homepage/banner.png}" alt="hero-banner" />
         </div>
         <div class="home-content">
                     <span class="home-title" id="home-title">
@@ -58,7 +58,7 @@
         <div class="about-blog">
             <img
                     class="about-blog-image"
-                    th:src="@{/images/pic/homepage/about.png}"
+                    th:src="@{/images/homepage/about.png}"
                     alt="about"
             />
             <div class="about-content">
@@ -76,13 +76,12 @@
         </div>
 
         <div class="about-me">
-            <img class="about-me-image" th:src="@{/images/pic/homepage/me.png}" alt="" />
+            <img class="about-me-image" th:src="@{/images/homepage/owner.png}" alt="" />
         </div>
     </section>
 
     <section class="collections-section" id="collections">
         <span class="section-title">Featured Collections</span>
-
         <div class="collection-cards">
             <div class="collection-card active" id="collection-1">
                 <div class="collection-icon">
@@ -154,11 +153,10 @@
 
     <section class="topics-section" id="topics">
         <span class="section-title">Featured Topics</span>
-
         <div class="topic-cards">
             <a class="topic-card active" id="topic-1">
                 <div class="topic-image">
-                    <img th:src="@{/images/pic/homepage/topics/topic-1.png}" alt="" />
+                    <img th:src="@{/images/homepage/topics/topic-1.png}" alt="" />
                 </div>
                 <div class="topic-meta">
                     <span class="topic-collection">Trốn nắng hẹn trăng</span>
@@ -173,7 +171,7 @@
 
             <a class="topic-card" id="topic-2">
                 <div class="topic-image">
-                    <img th:src="@{/images/pic/homepage/topics/topic-1.png}" alt="" />
+                    <img th:src="@{/images/homepage/topics/topic-1.png}" alt="" />
                 </div>
                 <div class="topic-meta">
                     <span class="topic-collection">Thẩn thẩn thơ thơ</span>
@@ -188,7 +186,7 @@
 
             <a class="topic-card" id="topic-3">
                 <div class="topic-image">
-                    <img th:src="@{/images/pic/homepage/topics/topic-1.png}" alt="" />
+                    <img th:src="@{/images/homepage/topics/topic-1.png}" alt="" />
                 </div>
                 <div class="topic-meta">
                     <span class="topic-collection">Hyun đã ở đây</span>
@@ -203,7 +201,7 @@
 
             <a class="topic-card" id="topic-4">
                 <div class="topic-image">
-                    <img th:src="@{/images/pic/homepage/topics/topic-1.png}" alt="" />
+                    <img th:src="@{/images/homepage/topics/topic-1.png}" alt="" />
                 </div>
                 <div class="topic-meta">
                     <span class="topic-collection">Người kể chuyện nhà</span>
@@ -218,7 +216,7 @@
 
             <a class="topic-card" id="topic-5">
                 <div class="topic-image">
-                    <img th:src="@{/images/pic/homepage/topics/topic-1.png}" alt="" />
+                    <img th:src="@{/images/homepage/topics/topic-1.png}" alt="" />
                 </div>
                 <div class="topic-meta">
                     <span class="topic-collection">Chuyện để dành</span>
@@ -233,7 +231,7 @@
 
             <a class="topic-card" id="topic-6">
                 <div class="topic-image">
-                    <img th:src="@{/images/pic/homepage/topics/topic-1.png}" alt="" />
+                    <img th:src="@{/images/homepage/topics/topic-1.png}" alt="" />
                 </div>
                 <div class="topic-meta">
                     <span class="topic-collection">Nằm nghe Hyun nói</span>
@@ -255,7 +253,6 @@
                 </div>
             </div>
         </div>
-
         <div class="see-all-button" id="see-all-topic-button">
             <a th:href="@{/topics}" class="homepage-button">
                 Xem tất cả
@@ -269,50 +266,35 @@
         <div class="gallery-container">
             <div class="gallery-wrapper" id="gallery-wrapper">
                 <div class="gallery-item">
-                    <img
-                            th:src="@{/images/pic/homepage/gallery/1.jpg}"
-                            alt="gallery-image-1"
-                    />
+                    <img th:src="@{/images/homepage/gallery/1.jpg}" alt="gallery-image-1" />
                 </div>
                 <div class="gallery-item">
-                    <img
-                            th:src="@{/images/pic/homepage/gallery/2.jpg}"
-                            alt="gallery-image-2"
-                    />
+                    <img th:src="@{/images/homepage/gallery/2.jpg}" alt="gallery-image-2" />
                 </div>
                 <div class="gallery-item">
-                    <img
-                            th:src="@{/images/pic/homepage/gallery/3.jpg}"
-                            alt="gallery-image-3"
-                    />
+                    <img th:src="@{/images/homepage/gallery/3.jpg}" alt="gallery-image-3" />
                 </div>
                 <div class="gallery-item">
-                    <img
-                            th:src="@{/images/pic/homepage/gallery/4.jpg}"
-                            alt="gallery-image-4"
-                    />
+                    <img th:src="@{/images/homepage/gallery/4.jpg}" alt="gallery-image-4" />
                 </div>
                 <div class="gallery-item">
-                    <img
-                            th:src="@{/images/pic/homepage/gallery/5.jpg}"
-                            alt="gallery-image-5"
-                    />
+                    <img th:src="@{/images/homepage/gallery/5.jpg}" alt="gallery-image-5" />
                 </div>
             </div>
 
             <div class="gallery-nav">
-                <button class="nav-btn" id="prev-gal" type="button">
+                <div class="nav-btn" id="prev-gal">
                     <span class="material-symbols-rounded">arrow_back</span>
-                </button>
-                <button class="nav-btn" id="next-gal" type="button">
+                </div>
+                <div class="nav-btn" id="next-gal">
                     <span class="material-symbols-rounded">arrow_forward</span>
-                </button>
+                </div>
             </div>
         </div>
     </section>
 </main>
 
-<th:block layout:fragment="pageScripts">
+<th:block layout:fragment="scripts">
     <script th:src="@{/js/homepage.js}" defer></script>
 </th:block>
 </body>

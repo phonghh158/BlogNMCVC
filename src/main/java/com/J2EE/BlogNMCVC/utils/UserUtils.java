@@ -16,4 +16,11 @@ public class UserUtils {
 
         return UUID.fromString(authentication.getName());
     }
+
+    public static boolean isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null
+                && authentication.isAuthenticated()
+                && !"anonymousUser".equals(authentication.getPrincipal());
+    }
 }

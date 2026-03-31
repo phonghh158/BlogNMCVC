@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon/favicon.ico}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" th:href="@{/css/404.css}" />
+
+    <title>Ối! Đi lạc rồi - Nhà, mây, cá và cây</title>
+</head>
+<body>
+<div class="not-found-wrapper">
+    <div class="not-found-content">
+        <div class="not-found-image">
+            <img
+                    th:src="@{/images/404/404-error.png}"
+                    alt="Chủ nhà đi chơi"
+            />
+        </div>
+
+        <h1 class="not-found-code">404</h1>
+
+        <p class="not-found-message">
+            Chủ nhà đang đi dạo, mọi người vào Nhà ngồi chơi, đợi chút nha!
+        </p>
+
+        <a th:href="@{/}" class="back-home-button">
+            <span class="material-symbols-rounded">home</span>
+            <span class="text">Vào Nhà ngồi chơi.</span>
+        </a>
+    </div>
+</div>
+</body>
+</html>

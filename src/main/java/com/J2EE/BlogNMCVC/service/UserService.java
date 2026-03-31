@@ -1,6 +1,7 @@
 package com.J2EE.BlogNMCVC.service;
 
 import com.J2EE.BlogNMCVC.dto.request.ChangeUsernameRequest;
+import com.J2EE.BlogNMCVC.dto.response.UploadResponse;
 import com.J2EE.BlogNMCVC.dto.response.UserResponse;
 import com.J2EE.BlogNMCVC.mapper.UserMapper;
 import com.J2EE.BlogNMCVC.model.User;
@@ -12,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -27,7 +30,14 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UploadService uploadService;
+
     public UserResponse getMe() {
+        if (!UserUtils.isAuthenticated()) {
+            return null;
+        }
+
         UUID id = UserUtils.getCurrentUserId();
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
@@ -58,13 +68,20 @@ public class UserService {
         return "Update Name successfully!";
     }
 
-    public String updateAvatar(UUID id, String avatar) {
+    @Transactional
+    public String updateAvatar(UUID id, MultipartFile avatar) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
 
-        user.setAvatar(avatar);
+        UploadResponse uploadResponse = uploadService.uploadImage(avatar, "avatars");
+
+        if (uploadResponse == null) {
+            throw new RuntimeException("Upload Avatar Failed!");
+        }
+
+        user.setAvatar(uploadResponse.getSecureUrl());
         userRepository.save(user);
-        return "Update Avatar successfully!";
+        return "Update avatar successfully!";
     }
 
     public String updateBio(UUID id, String bio) {

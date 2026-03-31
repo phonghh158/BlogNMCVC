@@ -3,6 +3,7 @@ package com.J2EE.BlogNMCVC.service;
 import com.J2EE.BlogNMCVC.constant.TopicStatus;
 import com.J2EE.BlogNMCVC.dto.request.TopicRequest;
 import com.J2EE.BlogNMCVC.dto.response.TopicResponse;
+import com.J2EE.BlogNMCVC.dto.response.UploadResponse;
 import com.J2EE.BlogNMCVC.mapper.TopicMapper;
 import com.J2EE.BlogNMCVC.model.Collection;
 import com.J2EE.BlogNMCVC.model.Topic;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -36,9 +39,12 @@ public class TopicService {
 
     @Autowired
     private CollectionRepository collectionRepository;
+    @Autowired
+    private UploadService uploadService;
 
     // CREATE
-    public TopicResponse createTopic(TopicRequest req) {
+    @Transactional
+    public TopicResponse createTopic(TopicRequest req, MultipartFile thumbnail) {
         String slug = SlugUtils.toSlug(req.getTitle());
 
         slug = SlugUtils.toUniqueSlug(topicRepository.existsBySlug(slug), slug, LocalDateTime.now());
@@ -46,15 +52,20 @@ public class TopicService {
         User user = userRepository.findById(UserUtils.getCurrentUserId())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        Collection collection = collectionRepository
-                .findById(req.getCollectionId())
+        Collection collection = collectionRepository.findById(req.getCollectionId())
                 .orElseThrow(() -> new IllegalArgumentException("Collection not found"));
 
-        Topic topic = topicMapper.toEntity(req, user, collection, slug);
+        UploadResponse uploadResponse = uploadService.uploadImage(thumbnail, "topics");
 
-        Topic newTopic = topicRepository.save(topic);
+        if (uploadResponse == null) {
+            throw new RuntimeException("Upload Failed");
+        }
 
-        return topicMapper.toResponse(newTopic);
+        Topic topic = topicMapper.toEntity(req, user, collection, slug, uploadResponse.getSecureUrl());
+
+        topic = topicRepository.save(topic);
+
+        return topicMapper.toResponse(topic);
     }
 
     // READ
@@ -103,6 +114,36 @@ public class TopicService {
         return topicRepository.findAllByCollection(collection, pageable).map(topicMapper::toResponse);
     }
 
+    public Page<TopicResponse> getTopicsByStatus(TopicStatus status, int page, int size) {
+        if (status == null) {
+            throw new IllegalArgumentException("status must not be null");
+        }
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("createdAt").descending()
+        );
+
+        return topicRepository.findAllByStatus(status, pageable).map(topicMapper::toResponse);
+    }
+
+    public Page<TopicResponse> getTopicsByCollectionAndStatus(UUID topicId, TopicStatus status, int page, int size) {
+        Collection collection = collectionRepository.findById(topicId).orElseThrow(() -> new IllegalArgumentException("Collection not found"));
+
+        if (status == null) {
+            throw new IllegalArgumentException("status must not be null");
+        }
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("createdAt").descending()
+        );
+
+        return topicRepository.findAllByCollectionAndStatus(collection, status, pageable).map(topicMapper::toResponse);
+    }
+
     // Read One
     // Read By Slug
     public TopicResponse getTopicBySlug(String slug) {
@@ -143,17 +184,24 @@ public class TopicService {
     }
 
     // UPDATE
-    public TopicResponse updateTopic(UUID id, TopicRequest req) {
+    public TopicResponse updateTopic(UUID id, TopicRequest req, MultipartFile thumbnail) {
         Topic topic = topicRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Collection not found"));
 
         Collection collection = collectionRepository.findById(req.getCollectionId())
                 .orElseThrow(() -> new IllegalArgumentException("Collection not found"));
 
+        UploadResponse uploadResponse = uploadService.uploadImage(thumbnail, "topics");
+
+        if (uploadResponse != null) {
+            topic.setThumbnail(uploadResponse.getSecureUrl());
+        }
+
         topic.setCollection(collection);
         topic.setTitle(req.getTitle());
         topic.setContent(req.getContent());
-        topic.setThumbnail(req.getThumbnail());
+        topic.setFootnote(req.getFootnote());
+        topic.setFacebookLink(req.getFacebookLink());
         topic.setStatus(req.getStatus());
 
         topicRepository.save(topic);

@@ -10,14 +10,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class TopicMapper {
 
-    public Topic toEntity(TopicRequest req, User user, Collection collection, String slug) {
+    public Topic toEntity(TopicRequest req, User user, Collection collection, String slug, String thumbnail) {
         return Topic.builder()
                 .user(user)
                 .collection(collection)
                 .title(req.getTitle())
                 .slug(slug)
                 .content(req.getContent())
-                .thumbnail(req.getThumbnail())
+                .footnote(req.getFootnote())
+                .facebookLink(req.getFacebookLink())
+                .thumbnail(thumbnail)
                 .status(req.getStatus())
                 .build();
     }
@@ -28,6 +30,8 @@ public class TopicMapper {
                 .title(topic.getTitle())
                 .slug(topic.getSlug())
                 .content(topic.getContent())
+                .footnote(topic.getFootnote())
+                .facebookLink(topic.getFacebookLink())
                 .thumbnail(topic.getThumbnail())
                 .status(topic.getStatus())
                 .publishedAt(topic.getPublishedAt())

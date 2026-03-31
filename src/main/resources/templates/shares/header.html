@@ -1,15 +1,11 @@
-<!doctype html>
-<html
-        lang="vi"
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
->
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <body>
-<header th:fragment="header">
+<header th:fragment="header(pageName)">
     <span class="website-name">Nhà, mây, cá và cây</span>
-    <span class="website-page-name" id="website-page-name" layout:fragment="pageName">
-                Trang chủ
-            </span>
+    <span class="website-page-name" id="website-page-name" th:text="${pageName}">
+        Trang chủ
+    </span>
 </header>
 </body>
 </html>

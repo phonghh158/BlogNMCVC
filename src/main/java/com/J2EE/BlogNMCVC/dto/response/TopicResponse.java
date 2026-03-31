@@ -20,6 +20,10 @@ public class TopicResponse {
 
     private String content;
 
+    private String footnote;
+
+    private String facebookLink;
+
     private String thumbnail;
 
     private TopicStatus status;

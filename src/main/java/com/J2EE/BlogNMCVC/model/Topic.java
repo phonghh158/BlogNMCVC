@@ -50,6 +50,12 @@ public class Topic {
     @Column(name = "content", columnDefinition = "LONGTEXT", nullable = false)
     private String content;
 
+    @Column(name = "footnote", length = 512)
+    private String footnote;
+
+    @Column(name = "facebook_link", length = 1024)
+    private String facebookLink;
+
     @Column(name = "thumbnail", length = 1024)
     private String thumbnail;
 

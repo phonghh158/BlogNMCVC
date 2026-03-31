@@ -62,7 +62,7 @@ public class AuthService implements UserDetailsService {
         // VERIFY EMAIL
         String token = tokenService.generateToken(TokenType.VERIFY_EMAIL, 60, user);
 
-        String verifyLink = "http://localhost:8080/api/auth/verify?token=" + token;
+        String verifyLink = "http://localhost:8080/auth/verify?token=" + token;
         mailService.sendVerifyEmail(user.getEmail(), user.getName(), verifyLink);
 
         return authMapper.toAuthResponse(user, "Register new account successfully!");
@@ -86,7 +86,7 @@ public class AuthService implements UserDetailsService {
 
         String token = tokenService.generateToken(TokenType.RESET_PASSWORD, 15, user);
 
-        String verifyLink = "http://localhost:8080/api/auth/reset-password?token=" + token;
+        String verifyLink = "http://localhost:8080/auth/reset-password?token=" + token;
 
         mailService.sendResetPasswordEmail(user.getEmail(), user.getName(), verifyLink);
     }

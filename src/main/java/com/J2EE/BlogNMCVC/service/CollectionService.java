@@ -138,6 +138,8 @@ public class CollectionService {
             });
         }
 
+        topicRepository.saveAll(topics);
+
         return "Deleted collection with Name: " + collection.getName();
     }
 
@@ -157,6 +159,8 @@ public class CollectionService {
                 topic.setStatus(TopicStatus.PUBLISHED);
             });
         }
+
+        topicRepository.saveAll(topics);
 
         return "Restored collection with Name: " + collection.getName();
     }

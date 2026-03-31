@@ -3,9 +3,9 @@
 
 :root {
     /* Palette Light */
-    --color-background: #fffcf6;
-    --color-surface: #fdf2e0;
-    --color-secondary: #ffa2a2;
+    --color-background: #fafafa;
+    --color-surface: #fff3f3;
+    --color-secondary: #ebd9d9;
     --color-primary: #fc8080;
 
     /* Text */
@@ -218,7 +218,7 @@ nav ul {
 nav .personal {
     display: none;
 }
-nav.authenticated .login {
+nav.authenticated .authentication {
     display: none;
 }
 
@@ -327,20 +327,20 @@ nav.collapsed .menu .text {
     opacity: 0;
 }
 
-nav .login {
+nav .authentication {
     width: 100%;
     height: max-content;
     gap: 4px;
     bottom: 0;
 }
-nav.collapsed .login {
+nav.collapsed .authentication {
     width: 48px;
     height: 48px;
     gap: 0;
     bottom: 0px;
 }
 
-nav .login a {
+nav .authentication a {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -352,28 +352,28 @@ nav .login a {
     transition: all 0.33s ease;
     cursor: pointer;
 }
-nav.collapsed .login a {
+nav.collapsed .authentication a {
     padding: 0;
     gap: 0;
     justify-content: center;
 }
 
-nav .login a:hover {
+nav .authentication a:hover {
     padding: 0 16px;
     background-color: rgb(from var(--color-secondary) r g b / 0.33);
 }
-nav.collapsed .login a:hover {
+nav.collapsed .authentication a:hover {
     padding: 0;
 }
 
-nav .login .text {
+nav .authentication .text {
     width: fit-content;
     height: fit-content;
     font-family: var(--font-text);
     font-size: 18px;
     opacity: 1;
 }
-nav.collapsed .login .text {
+nav.collapsed .authentication .text {
     font-size: 0;
     opacity: 0;
 }
@@ -467,7 +467,25 @@ nav.collapsed .personal .dropdown-content {
     background-color: var(--color-background);
 }
 
-.personal .dropdown-content a {
+.personal .dropdown-content .logout-form {
+    display: flex;
+    width: 100%;
+}
+
+.personal .dropdown-content .logout-form .logout-btn {
+    all: unset;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    gap: 8px;
+    padding: 0 16px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.personal .dropdown-content a,
+.personal .dropdown-content .logout-form {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -526,7 +544,8 @@ nav.collapsed .personal.active .dropdown-content {
     height: 96px;
 }
 
-.personal.active .dropdown-content a {
+.personal.active .dropdown-content a,
+.personal.active .dropdown-content .logout-form {
     height: 36px;
     padding: 0 4px;
     gap: 8px;
@@ -569,13 +588,13 @@ nav.collapsed .personal.active .dropdown-content a .text {
     font-size: 0;
 }
 
-nav.authenticated .login {
+nav.authenticated .authentication {
     display: none;
 }
 nav.authenticated .personal {
     display: flex;
 }
-nav .login {
+nav .authentication {
     display: flex;
 }
 nav .personal {

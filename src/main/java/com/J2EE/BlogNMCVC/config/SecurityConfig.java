@@ -9,8 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 public class SecurityConfig {
 
@@ -24,33 +22,38 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
-    // Test HTTP CLient
+    // Sử dụng form thymeleaf
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/register",
-                                "/api/auth/verify")
-                        .permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/authentication",
+                                "/register",
+                                "/auth/**",
+                                "/collections/**",
+                                "/topics/**",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**"
+                        ).permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
-                .formLogin(withDefaults())
-                .logout(withDefaults());
+                .formLogin(form -> form
+                        .loginPage("/authentication")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/authentication?error")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/authentication?logout")
+                        .permitAll()
+                );
 
         return http.build();
     }
-
-    // Sử dụng form thymeleaf
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/api/auth/register").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .formLogin(withDefaults())
-//                .logout(withDefaults());
-//
-//        return http.build();
-//    }
 }

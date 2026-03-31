@@ -1,5 +1,6 @@
 package com.J2EE.BlogNMCVC.repository;
 
+import com.J2EE.BlogNMCVC.constant.TopicStatus;
 import com.J2EE.BlogNMCVC.model.Collection;
 import com.J2EE.BlogNMCVC.model.Topic;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,10 @@ public interface TopicRepository extends JpaRepository<Topic, UUID> {
 
     // ADMIN
     Page<Topic> findAllByCollection(Collection collection, Pageable pageable);
+
+    Page<Topic> findAllByStatus(TopicStatus status, Pageable pageable);
+
+    Page<Topic> findAllByCollectionAndStatus(Collection collection, TopicStatus status, Pageable pageable);
 
     Optional<Topic> findByTitle(String title);
 

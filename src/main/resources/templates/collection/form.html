@@ -1,0 +1,76 @@
+<!doctype html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <title th:text="${formTitle}">Collection Form</title>
+    <link rel="stylesheet" th:href="@{/css/pages/collection/collection-form.css}" />
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="form-wrapper">
+        <div class="form-container">
+            <div class="form-header">
+                <h1 class="title" th:text="${formTitle}">Thêm Collection Mới</h1>
+
+                <p class="subtitle" th:unless="${isEdit}">
+                    Tạo một tuyển tập mới cho các bài viết của bạn.
+                </p>
+                <p class="subtitle" th:if="${isEdit}">
+                    Chỉnh sửa collection của bạn.
+                </p>
+            </div>
+
+            <form
+                    class="collection-form"
+                    th:action="@{${formAction}}"
+                    th:object="${collectionRequest}"
+                    method="post"
+            >
+                <div class="form-group">
+                    <label for="name">Collection Name</label>
+                    <input
+                            type="text"
+                            id="name"
+                            th:field="*{name}"
+                            placeholder="Nhập tên collection..."
+                            autocomplete="off"
+                            required
+                    />
+                    <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Describe</label>
+                    <textarea
+                            id="description"
+                            th:field="*{description}"
+                            rows="5"
+                            placeholder="Mô tả đôi dòng về collection này..."
+                    ></textarea>
+                    <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></small>
+                </div>
+
+                <div class="form-actions">
+                    <a th:href="@{/admin/collections}" class="btn btn-cancel">
+                        Hủy
+                    </a>
+
+                    <button type="submit" class="btn btn-submit" th:unless="${isEdit}">
+                        Lưu Collection
+                    </button>
+
+                    <button type="submit" class="btn btn-submit" th:if="${isEdit}">
+                        Lưu Chỉnh Sửa
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

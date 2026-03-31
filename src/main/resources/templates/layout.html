@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html
         lang="vi"
         xmlns:th="http://www.thymeleaf.org"
@@ -7,26 +7,32 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="icon" type="image/x-icon" th:href="@{/images/favicon/favicon.ico}" />
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
-    <title layout:title-pattern="$CONTENT_TITLE | Nhà, mây, cá và cây">Nhà, mây, cá và cây</title>
+
+    <th:block layout:fragment="styles"></th:block>
+
+    <title th:text="${pageTitle != null ? pageTitle : 'Nhà, mây, cá và cây'}">Nhà, mây, cá và cây</title>
 </head>
 <body>
-<th:block th:replace="~{shares/nav :: nav}"></th:block>
-
-<th:block th:replace="~{shares/website-settings :: websiteSettings}"></th:block>
+<div th:replace="~{shares/nav :: nav}"></div>
+<div th:replace="~{shares/website-settings :: website-settings}"></div>
 
 <div class="wrapper">
-    <th:block th:replace="~{shares/header :: header}"></th:block>
+    <div
+            th:replace="~{shares/header :: header(${pageTitle != null ? pageTitle : 'Trang'})}"
+    ></div>
 
     <main layout:fragment="content"></main>
 
-    <th:block th:replace="~{shares/footer :: footer}"></th:block>
+    <div th:replace="~{shares/footer :: footer}"></div>
 </div>
 
+<!-- Nhớ xóa khi deploy -->
 <span class="device-screen-dimension" id="device-screen-dimension">Loading...</span>
 
-<th:block layout:fragment="pageScripts"></th:block>
 <script th:src="@{/js/index.js}" defer></script>
+<th:block layout:fragment="scripts"></th:block>
 </body>
 </html>
