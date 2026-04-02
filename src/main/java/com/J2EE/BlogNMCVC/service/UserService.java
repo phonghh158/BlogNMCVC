@@ -38,9 +38,13 @@ public class UserService {
             return null;
         }
 
-        UUID id = UserUtils.getCurrentUserId();
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+        UUID userId = UserUtils.getCurrentUserId();
+
+        if (userId == null) {
+            throw new UsernameNotFoundException("User Not Found");
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("Cannot find user with id: " + userId));
 
         return userMapper.toUserResponse(user);
     }

@@ -10,11 +10,18 @@ public class UserUtils {
     public static UUID getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || authentication.getName() == null) {
-            throw new IllegalStateException("Unauthenticated user");
+        if (authentication == null
+                || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getPrincipal())
+                || authentication.getName() == null) {
+            return null;
         }
 
-        return UUID.fromString(authentication.getName());
+        try {
+            return UUID.fromString(authentication.getName());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     public static boolean isAuthenticated() {

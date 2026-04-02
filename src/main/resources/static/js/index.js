@@ -70,10 +70,16 @@ collapseNavButton.addEventListener("click", () => {
 
 const personalButton = document.getElementById("personal-button");
 
-personalButton.addEventListener("click", () => {
-    const personal = document.querySelector(".personal");
-    personal.classList.toggle("active");
-});
+if (personalButton != null) {
+    personalButton.addEventListener("click", () => {
+        const personal = document.querySelector(".personal");
+        personal.classList.toggle("active");
+    });
+}
+
+function confirmDelete(confirmString) {
+    return confirm(confirmString);
+}
 
 // Device Screen Dimension
 const screenDisplay = document.getElementById("device-screen-dimension");

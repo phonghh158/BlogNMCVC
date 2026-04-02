@@ -1,10 +1,12 @@
 package com.J2EE.BlogNMCVC.constant;
 
 public enum AuthorReaction {
-    NULL,
-    LIKE,
+    HUG,
     LOVE,
-    FUNNY,
+    CHILL,
+    EHEHE,
+    SHOCK,
+    UNCOMFORTABLE,
     ANGRY,
-    SAD
+    FUFU
 }

@@ -11,6 +11,7 @@ import lombok.Setter;
 import java.util.UUID;
 
 @Getter
+@Setter
 public class TopicRequest {
     @NotNull(message = "Collection id is required")
     private UUID collectionId;
@@ -25,7 +26,7 @@ public class TopicRequest {
     @Size(max = 512, message = "Footnote must be less than or equal to 512 characters")
     private String footnote;
 
-    @Size(max = 1024, message = "FacebookLink must be less than or equal to 512 characters")
+    @Size(max = 1024, message = "FacebookLink must be less than or equal to 1024 characters")
     private String facebookLink;
 
     @NotNull(message = "Status is required")

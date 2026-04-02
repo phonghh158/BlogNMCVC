@@ -35,7 +35,13 @@ public class BookmarkService {
 
     // CREATE
     public BookmarkResponse addBookmark(UUID topicId) {
-        User user = userRepository.findById(UserUtils.getCurrentUserId()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        UUID userId = UserUtils.getCurrentUserId();
+
+        if (userId == null) {
+            throw new UsernameNotFoundException("User Not Found");
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("Cannot find user with id: " + userId));
 
         Topic topic = topicRepository.findById(topicId).orElseThrow(() -> new IllegalArgumentException("Topic Not Found"));
 
@@ -49,8 +55,41 @@ public class BookmarkService {
         return bookmarkMapper.toResponse(bookmark);
     }
 
+    // DELETE
+    public void deleteBookmark(UUID id) {
+        bookmarkRepository.deleteById(id);
+    }
+
+    public BookmarkResponse findBookmarkByTopicAndMe(UUID id) {
+        Topic topic = topicRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find topic with id: " + id));
+
+        UUID userId = UserUtils.getCurrentUserId();
+
+        if (userId == null) {
+            return null;
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("Cannot find user with id: " + userId));
+
+        Bookmark bookmark = bookmarkRepository.findByTopicAndUser(topic, user);
+
+        if (bookmark == null) {
+            return null;
+        }
+
+        return bookmarkMapper.toResponse(bookmark);
+    }
+
+
     public Page<BookmarkResponse> findAllByUser(int page, int size) {
-        User user = userRepository.findById(UserUtils.getCurrentUserId()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        UUID userId = UserUtils.getCurrentUserId();
+
+        if (userId == null) {
+            throw new UsernameNotFoundException("User Not Found");
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("Cannot find user with id: " + userId));
 
         Pageable pageable = PageRequest.of(
                 page,
@@ -71,5 +110,24 @@ public class BookmarkService {
         );
 
         return bookmarkRepository.findAllByUser(user, pageable).map(bookmarkMapper::toResponse);
+    }
+
+    public BookmarkResponse findBookmarkById(UUID id) {
+        return bookmarkMapper.toResponse(bookmarkRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Bookmark not found")));
+    }
+
+    public boolean existsBookmarkByTopicAndMe(UUID id) {
+        Topic topic = topicRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find topic with id: " + id));
+
+        UUID userId = UserUtils.getCurrentUserId();
+
+        if (userId == null) {
+            throw new UsernameNotFoundException("User Not Found");
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("Cannot find user with id: " + userId));
+
+        return bookmarkRepository.existsBookmarkByTopicAndUser(topic, user);
     }
 }

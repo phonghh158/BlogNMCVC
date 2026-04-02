@@ -33,10 +33,16 @@ public class ReactionService {
 
     @Autowired
     private ReactionMapper reactionMapper;
+    private UserService userService;
 
     // CREATE
     public ReactionResponse addReaction(UUID topicId, ReactionType reactionType) {
         UUID userId = UserUtils.getCurrentUserId();
+
+        if (userId == null) {
+            throw new UsernameNotFoundException("User Not Found");
+        }
+
         User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("Cannot find user with id: " + userId));
 
         Topic topic = topicRepository.findById(topicId).orElseThrow(() -> new IllegalArgumentException("Cannot find topic with id: " + topicId));
@@ -50,6 +56,39 @@ public class ReactionService {
         reaction = reactionRepository.save(reaction);
 
         return reactionMapper.toResponse(reaction);
+    }
+
+    // DELETE
+    public void deleteReaction(UUID id) {
+        reactionRepository.deleteById(id);
+    }
+
+    public ReactionResponse findReactionByTopicAndMe(UUID id) {
+        Topic topic = topicRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find topic with id: " + id));
+
+        UUID userId = UserUtils.getCurrentUserId();
+
+        if (userId == null) {
+            return null;
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("Cannot find user with id: " + userId));
+
+        Reaction reaction = reactionRepository.findByTopicAndUser(topic, user);
+
+        if (reaction == null) {
+            return null;
+        }
+
+        return reactionMapper.toResponse(reaction);
+    }
+
+    public long countAllReactionByTopic(UUID id) {
+        Topic topic = topicRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find topic with id: " + id));
+
+        return reactionRepository.countAllByTopic(topic);
     }
 
     // READ
@@ -81,11 +120,23 @@ public class ReactionService {
         return reactionRepository.findAllByTopicAndReactionType(topic, reactionType, pageable).map(reactionMapper::toResponse);
     }
 
-    public long countAllReactionByTopic(UUID id) {
+    public ReactionResponse findReactionById(UUID id) {
+        return reactionMapper.toResponse(reactionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Cannot find reaction with id: " + id)));
+    }
+
+    public boolean existsReactionByTopicAndMe(UUID id) {
         Topic topic = topicRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Cannot find topic with id: " + id));
 
-        return reactionRepository.countAllByTopic(topic);
+        UUID userId = UserUtils.getCurrentUserId();
+
+        if (userId == null) {
+            throw new UsernameNotFoundException("User Not Found");
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("Cannot find user with id: " + userId));
+
+        return reactionRepository.existsReactionByTopicAndUser(topic, user);
     }
 
     public long countAllReactionByTopicAndReactionType(UUID id, ReactionType reactionType) {
@@ -104,11 +155,5 @@ public class ReactionService {
         reaction = reactionRepository.save(reaction);
 
         return reactionMapper.toResponse(reaction);
-    }
-
-    // DELETE
-    public String deleteReaction(UUID id) {
-        reactionRepository.deleteById(id);
-        return "Reaction with id: " + id + " has been deleted";
     }
 }

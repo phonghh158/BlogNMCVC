@@ -7,10 +7,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark, UUID> {
+    List<Bookmark> findAllByTopic(Topic topic);
+
     Page<Bookmark> findAllByTopic(Topic topic, Pageable pageable);
 
     Page<Bookmark> findAllByUser(User user, Pageable pageable);
+
+    Bookmark findByTopicAndUser(Topic topic, User user);
+
+    boolean existsBookmarkByTopicAndUser(Topic topic, User user);
 }

@@ -59,7 +59,7 @@
         </div>
         <div class="dropdown-button" id="personal-button">
             <img
-                    th:src="${currentUser != null && currentUser.avatar != null} ? ${currentUser.avatar} : '/images/user/default.png'"
+                    th:src="${currentUser != null && currentUser.avatar != null} ? ${currentUser.avatar} : '/images/default-avatar.jpg'"
                     alt="personal-avatar"
             />
             <span class="text" th:text="'@' + ${currentUser.username}"></span>

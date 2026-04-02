@@ -67,13 +67,11 @@ main {
 .homepage-nav .menu a.active .text {
     font-size: 20px;
     font-weight: 500;
-    color: var(--color-text-secondary);
 }
 .homepage-nav .menu a.active .material-symbols-rounded {
     font-size: 26px;
     --icon-opsz: 26;
     --icon-wght: 400;
-    color: var(--color-text-inverse);
 }
 
 /* Homepage's Sections */

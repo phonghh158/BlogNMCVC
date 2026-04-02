@@ -65,6 +65,14 @@ public class CollectionService {
         return collectionRepository.findAll(pageable).map(collectionMapper::toResponse);
     }
 
+    public List<CollectionResponse> getListCollectionsByDeletedAtIsNull() {
+        Sort sort = Sort.by(
+                "createdAt"
+        ).descending();
+
+        return collectionRepository.findAllByDeletedAtIsNull(sort).stream().map(collectionMapper::toResponse).toList();
+    }
+
     // Read One
     // Read By Slug
     public CollectionResponse getCollectionBySlug(String slug) {
@@ -107,18 +115,26 @@ public class CollectionService {
     // Update
     public CollectionResponse updateCollection(UUID id, CollectionRequest req) {
         Collection collection = collectionRepository.findById(id)
-                .orElseThrow( () -> new RuntimeException("Collection with id " + id + " not found"));
+                .orElseThrow(() -> new RuntimeException("Collection with id " + id + " not found"));
 
-        String slug = SlugUtils.toSlug(req.getName());
-        slug = SlugUtils.toUniqueSlug(collectionRepository.existsBySlug(slug), slug, collection.getCreatedAt());
+        String slug = collection.getSlug();
+        String newSlug = SlugUtils.toSlug(req.getName());
+
+        if (!newSlug.equals(collection.getSlug())) {
+            slug = SlugUtils.toUniqueSlug(
+                    collectionRepository.existsBySlug(newSlug),
+                    newSlug,
+                    collection.getCreatedAt()
+            );
+        }
 
         collection.setName(req.getName());
         collection.setDescription(req.getDescription());
         collection.setSlug(slug);
 
-        Collection updatedCollection = collectionRepository.save(collection);
+        collection = collectionRepository.save(collection);
 
-        return collectionMapper.toResponse(updatedCollection);
+        return collectionMapper.toResponse(collection);
     }
 
     // Delete

@@ -26,6 +26,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers(
+                                "/reactions/**",
+                                "/bookmarks/**",
+                                "/comments/**"
+                        )
+                )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/",
@@ -34,6 +41,9 @@ public class SecurityConfig {
                                 "/auth/**",
                                 "/collections/**",
                                 "/topics/**",
+                                "/comments/**",
+                                "/reactions/**",
+                                "/bookmarks/**",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**"

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html
+        lang="vi"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <title>Topics</title>
+    <link rel="stylesheet" th:href="@{/css/pages/topic/topic-list.css}" />
+</head>
+
+<body>
+<main layout:fragment="content">
+    <div class="topics-header">
+        <div class="topics-header-background" id="topics-header-background">
+            <img
+                    th:src="@{/images/pages/topic/topic-header-background.jpg}"
+                    class="topics-header-background"
+                    id="topics-header-background-image"
+                    alt="topics-header-background"
+            />
+        </div>
+        <span class="header-title" id="header-title">Topics</span>
+        <span class="header-subtitle" id="header-subtitle">
+            Những bài viết nhỏ được gom lại ở đây.
+        </span>
+    </div>
+
+    <div class="create-topic">
+        <span class="create-topic-title">Create a new Topic: </span>
+        <a th:href="@{/admin/topics/create}" class="create-topic-button">
+            <span class="material-symbols-rounded">add</span>
+            <span class="create-topic-button-text">Create</span>
+        </a>
+    </div>
+
+    <div class="topics-container">
+        <form th:action="@{/topics}" method="get" class="topic-filters">
+            <input type="hidden" name="page" value="0" />
+            <input type="hidden" name="size" th:value="${size}" />
+
+            <div class="filter-group">
+                <span class="filter-title">Filter by Collections</span>
+
+                <div class="filter-content" id="filter-collection">
+                    <label
+                            class="filter-option"
+                            th:each="collection : ${collections}"
+                            th:classappend="${selectedCollectionIds != null and #lists.contains(selectedCollectionIds, collection.id)} ? ' active' : ''"
+                    >
+                        <input
+                                type="checkbox"
+                                name="collectionIds"
+                                th:value="${collection.id}"
+                                th:checked="${selectedCollectionIds != null and #lists.contains(selectedCollectionIds, collection.id)}"
+                                hidden
+                        />
+                        <span th:text="${collection.name}"></span>
+                    </label>
+
+                    <a
+                            class="filter-clear"
+                            th:href="@{/topics(size=${size}, status=${selectedStatus})}"
+                            id="filter-clear-collection"
+                    >
+                        <span class="material-symbols-rounded">ink_eraser</span>
+                        <span>Clear All</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="filter-group" th:if="${isAdmin}">
+                <span class="filter-title">Filter by Status</span>
+
+                <div class="filter-content" id="filter-status">
+                    <label
+                            class="filter-option"
+                            th:each="statusItem : ${statuses}"
+                            th:classappend="${selectedStatus != null and selectedStatus == statusItem} ? ' active' : ''"
+                    >
+                        <input
+                                type="radio"
+                                name="status"
+                                th:value="${statusItem}"
+                                th:checked="${selectedStatus != null and selectedStatus == statusItem}"
+                                hidden
+                        />
+                        <span th:text="${statusItem}"></span>
+                    </label>
+
+                    <a
+                            class="filter-clear"
+                            th:href="@{/topics(size=${size}, collectionIds=${selectedCollectionIds})}"
+                            id="filter-clear-status"
+                    >
+                        <span class="material-symbols-rounded">ink_eraser</span>
+                        <span>Clear</span>
+                    </a>
+                </div>
+            </div>
+
+            <button hidden type="submit" class="filter-apply-button">Apply</button>
+        </form>
+
+        <div class="topic-list">
+            <a
+                    class="topic-card"
+                    th:each="topic : ${topicPage.content}"
+                    th:href="@{/topics/{slug}(slug=${topic.slug})}"
+            >
+                <div
+                        class="topic-image"
+                        th:if="${topic.thumbnail != null and !#strings.isEmpty(topic.thumbnail)}"
+                >
+                    <img th:src="${topic.thumbnail}" th:alt="${topic.title}" />
+                </div>
+
+                <div class="topic-meta">
+                    <span class="topic-collection" th:text="${topic.collectionName}"></span>
+                    <span
+                            class="topic-date"
+                            th:text="${topic.publishedAt != null
+                            ? #temporals.format(topic.publishedAt, 'dd ''Th''MM, yyyy')
+                            : #temporals.format(topic.createdAt, 'dd ''Th''MM, yyyy')}"
+                    ></span>
+                </div>
+
+                <span class="topic-title" th:text="${topic.title}"></span>
+
+                <span
+                        class="topic-summary"
+                        th:text="${topic.footnote != null and !#strings.isEmpty(topic.footnote) ? topic.footnote : #strings.abbreviate(#strings.replace(topic.content, '\n', ' '), 256)}"
+                ></span>
+            </a>
+
+            <div class="topic-empty" th:if="${topicPage.isEmpty()}">
+                <span>Chưa có bài viết nào.</span>
+            </div>
+        </div>
+
+        <div class="pagination" id="pagination" th:if="${topicPage.totalPages > 1}">
+            <a
+                    class="page-btn prev"
+                    th:if="${topicPage.hasPrevious()}"
+                    th:href="@{/topics(page=${currentPage - 1}, size=${size}, collectionIds=${selectedCollectionIds}, status=${selectedStatus})}"
+            >
+                <span class="material-symbols-rounded">chevron_left</span>
+            </a>
+
+            <span class="page-btn prev disabled" th:unless="${topicPage.hasPrevious()}">
+            <span class="material-symbols-rounded">chevron_left</span>
+        </span>
+
+            <div class="page-input-container">
+                <input
+                        type="number"
+                        class="current-page-input"
+                        id="current-page-input"
+                        th:value="${currentPage + 1}"
+                        min="1"
+                        th:max="${topicPage.totalPages}"
+                />
+                <span class="page-separator">/</span>
+                <span class="total-pages" id="total-pages" th:text="${topicPage.totalPages}"></span>
+            </div>
+
+            <a
+                    class="page-btn next"
+                    th:if="${topicPage.hasNext()}"
+                    th:href="@{/topics(page=${currentPage + 1}, size=${size}, collectionIds=${selectedCollectionIds}, status=${selectedStatus})}"
+            >
+                <span class="material-symbols-rounded">chevron_right</span>
+            </a>
+
+            <span class="page-btn next disabled" th:unless="${topicPage.hasNext()}">
+                <span class="material-symbols-rounded">chevron_right</span>
+            </span>
+        </div>
+    </div>
+</main>
+<th:block layout:fragment="scripts">
+    <script th:src="@{/js/pages/topic/topic-list.js}" defer></script>
+</th:block>
+</body>
+</html>

@@ -8,6 +8,9 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CommentRequest {
     @NotNull(message = "Topic id must not be null")
     private UUID topicId;

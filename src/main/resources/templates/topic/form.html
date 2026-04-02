@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html
+        lang="vi"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <title th:text="${isEdit} ? 'Cập nhật bài viết' : 'Tạo bài viết'">Topic Form</title>
+    <link rel="stylesheet" th:href="@{/css/pages/topic/topic-form.css}" />
+</head>
+<body>
+<main layout:fragment="content">
+    <form
+            class="topic-form"
+            th:action="@{${formAction}}"
+            th:object="${topicRequest}"
+            method="post"
+            enctype="multipart/form-data"
+    >
+        <label class="thumbnail-upload-box" id="thumbnail-upload-box" for="topic-thumbnail">
+            <input
+                    type="file"
+                    class="topic-thumbnail"
+                    id="topic-thumbnail"
+                    name="thumbnail"
+                    accept="image/png, image/jpg, image/jpeg, image/webp"
+                    th:required="${!isEdit}"
+            />
+
+            <img
+                    id="preview-image"
+                    class="preview-image"
+                    alt="Thumbnail Preview"
+                    th:src="${isEdit and topic != null and topic.thumbnail != null}
+                     ? ${topic.thumbnail}
+                     : ''"
+            />
+
+            <div class="upload-content">
+                <span class="material-symbols-rounded">upload</span>
+                <p class="upload-title">Upload thumbnail cho bài viết</p>
+                <p class="upload-note">Max 10MB, PNG, JPG, JPEG, WEBP</p>
+                <div class="browse-btn">Browse File</div>
+            </div>
+        </label>
+
+        <div class="field-error" th:if="${!isEdit and #fields.hasGlobalErrors()}">
+            <span th:each="err : ${#fields.globalErrors()}" th:text="${err}"></span>
+        </div>
+
+        <div class="topic-header">
+            <select class="topic-collection" id="topic-collection" th:field="*{collectionId}" required>
+                <option value="">-- Chọn tuyển tập --</option>
+                <option
+                        th:each="collection : ${collections}"
+                        th:value="${collection.id}"
+                        th:text="${collection.name}"
+                ></option>
+            </select>
+            <div class="field-error" th:if="${#fields.hasErrors('collectionId')}" th:errors="*{collectionId}"></div>
+
+            <input
+                    class="topic-title"
+                    id="topic-title"
+                    type="text"
+                    th:field="*{title}"
+                    placeholder="Nhập tiêu đề của bài viết này"
+                    required
+            />
+            <div class="field-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+
+            <span class="topic-meta">
+                By&nbsp;
+                <span class="topic-author" th:text="${authorName}">Author</span>
+                &nbsp;on&nbsp;
+                <span th:text="${publishedAt}">01 04, 2026</span>
+            </span>
+        </div>
+
+        <div class="topic-content">
+            <textarea
+                    class="content"
+                    id="content"
+                    rows="12"
+                    th:field="*{content}"
+                    placeholder="Viết nội dung bài viết ở đây..."
+                    required
+            ></textarea>
+            <div class="field-error" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+
+            <input
+                    class="footnote"
+                    id="footnote"
+                    type="text"
+                    th:field="*{footnote}"
+                    placeholder="Viết lời kết cho bài viết nhé."
+                    required
+            />
+            <div class="field-error" th:if="${#fields.hasErrors('footnote')}" th:errors="*{footnote}"></div>
+        </div>
+
+        <div class="topic-footer">
+            <input
+                    type="text"
+                    class="facebook-link"
+                    id="facebook-link"
+                    th:field="*{facebookLink}"
+                    placeholder="Nhập đường dẫn bài viết Facebook..."
+                    autocomplete="off"
+            />
+            <div class="field-error" th:if="${#fields.hasErrors('facebookLink')}" th:errors="*{facebookLink}"></div>
+
+            <select class="topic-status" id="topic-status" th:field="*{status}" required th:if="${isEdit}">
+                <option value="">-- Chọn trạng thái --</option>
+                <option
+                        th:each="status : ${statuses}"
+                        th:value="${status}"
+                        th:text="${status}"
+                ></option>
+            </select>
+            <div class="field-error" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+
+            <input type="hidden" id="status-hidden" th:field="*{status}" th:unless="${isEdit}" />
+
+            <div class="form-actions">
+                <a th:href="@{/topics}" class="btn btn-cancel" id="btn-cancel">Hủy</a>
+
+                <button
+                        type="submit"
+                        class="btn btn-draft"
+                        id="btn-draft"
+                        onclick="setStatus('DRAFT')"
+                        th:unless="${isEdit}"
+                >
+                    Lưu nháp
+                </button>
+
+                <button
+                        type="submit"
+                        class="btn btn-submit"
+                        id="btn-submit"
+                        onclick="setStatus('PUBLISHED')"
+                        th:text="${isEdit} ? 'Cập nhật' : 'Tạo bài viết'"
+                >
+                    Tạo bài viết
+                </button>
+            </div>
+        </div>
+    </form>
+</main>
+
+<th:block layout:fragment="scripts">
+    <script th:src="@{/js/pages/topic/topic-form.js}" defer></script>
+</th:block>
+</body>
+</html>

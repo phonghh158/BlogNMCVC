@@ -11,7 +11,7 @@
 </head>
 
 <body>
-<div layout:fragment="content">
+<main layout:fragment="content">
     <div class="form-wrapper">
         <div class="form-container">
             <div class="form-header">
@@ -21,7 +21,7 @@
                     Tạo một tuyển tập mới cho các bài viết của bạn.
                 </p>
                 <p class="subtitle" th:if="${isEdit}">
-                    Chỉnh sửa collection của bạn.
+                    Chỉnh sửa tuyển tập của bạn.
                 </p>
             </div>
 
@@ -49,7 +49,7 @@
                     <textarea
                             id="description"
                             th:field="*{description}"
-                            rows="5"
+                            rows="4"
                             placeholder="Mô tả đôi dòng về collection này..."
                     ></textarea>
                     <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></small>
@@ -71,6 +71,6 @@
             </form>
         </div>
     </div>
-</div>
+</main>
 </body>
 </html>

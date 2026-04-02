@@ -41,8 +41,13 @@ public class CommentService {
         Topic topic = topicRepository.findById(req.getTopicId())
                 .orElseThrow(() -> new RuntimeException("Could not find topic with id: " + req.getTopicId()));
 
-        User user = userRepository.findById(UserUtils.getCurrentUserId())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        UUID userId = UserUtils.getCurrentUserId();
+
+        if (userId == null) {
+            throw new UsernameNotFoundException("Cannot find user with id: " + userId);
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Comment comment = commentMapper.toEntity(req, topic, user);
 
@@ -53,6 +58,18 @@ public class CommentService {
 
     public Page<CommentResponse> getAllByTopic(UUID id, int page, int size) {
         Topic topic = topicRepository.findById(id).orElseThrow(() -> new RuntimeException("Could not find topic with id: " + id));
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("createdAt").descending()
+        );
+
+        return commentRepository.findAllByTopicAndDeletedAtIsNull(topic, pageable).map(commentMapper::toResponse);
+    }
+
+    public Page<CommentResponse> getAllByTopicForAdmin(String slug, int page, int size) {
+        Topic topic = topicRepository.findBySlug(slug).orElseThrow(() -> new RuntimeException("Could not find topic with slug: " + slug));
 
         Pageable pageable = PageRequest.of(
                 page,

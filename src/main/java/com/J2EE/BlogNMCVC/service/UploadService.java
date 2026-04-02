@@ -15,7 +15,7 @@ import java.util.UUID;
 @Service
 public class UploadService {
 
-    private static final long MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+    private static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024;
 
     private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of(
             "image/jpeg",
@@ -75,7 +75,7 @@ public class UploadService {
         }
 
         if (file.getSize() > MAX_IMAGE_SIZE) {
-            throw new IllegalArgumentException("Image size must not exceed 5MB");
+            throw new IllegalArgumentException("Image size must not exceed 10MB");
         }
     }
 

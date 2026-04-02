@@ -7,6 +7,8 @@ import com.J2EE.BlogNMCVC.model.Topic;
 import com.J2EE.BlogNMCVC.model.User;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class TopicMapper {
 
@@ -21,6 +23,7 @@ public class TopicMapper {
                 .facebookLink(req.getFacebookLink())
                 .thumbnail(thumbnail)
                 .status(req.getStatus())
+                .publishedAt(LocalDateTime.now())
                 .build();
     }
 

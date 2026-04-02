@@ -1,6 +1,7 @@
 package com.J2EE.BlogNMCVC.dto.response;
 
 import com.J2EE.BlogNMCVC.constant.TopicStatus;
+import com.J2EE.BlogNMCVC.constant.UserRole;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

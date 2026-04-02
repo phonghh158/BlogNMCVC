@@ -1,0 +1,159 @@
+<!doctype html>
+<html
+        lang="vi"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <title>Collections</title>
+
+    <th:block layout:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/pages/collection/collection-list.css}" />
+    </th:block>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="collection-header">
+        <div class="collection-header-background">
+            <img
+                    th:src="@{/images/pages/collection/collection-header-background.jpg}"
+                    class="collection-header-background"
+                    alt="collection-header-background"
+            />
+        </div>
+
+        <span class="header-title">Collection</span>
+        <span class="header-subtitle">
+            Nơi cất những mẩu chuyện nhỏ, những bài viết được gom lại thành từng kệ riêng.
+        </span>
+    </div>
+
+    <div
+            class="collection-body"
+            th:if="${collectionPage != null and !#lists.isEmpty(collectionPage.content)}"
+    >
+        <div class="collection-list">
+            <span class="material-symbols-rounded arrow" id="arrow">
+                keyboard_arrow_right
+            </span>
+
+            <div
+                    class="collection-item"
+                    th:each="collection, stat : ${collectionPage.content}"
+                    th:classappend="${stat.first} ? ' active' : ''"
+                    th:attr="data-id=${collection.id}"
+                    th:text="${collection.name}"
+            >
+                Collection Name
+            </div>
+
+            <div class="pagination" id="pagination" th:if="${collectionPage.totalPages > 1}">
+                <a
+                        class="page-btn prev"
+                        th:if="${collectionPage.hasPrevious()}"
+                        th:href="@{/collections(page=${currentPage - 1}, size=${size})}"
+                >
+                    <span class="material-symbols-rounded">chevron_left</span>
+                </a>
+
+                <span class="page-btn prev disabled" th:unless="${collectionPage.hasPrevious()}">
+                    <span class="material-symbols-rounded">chevron_left</span>
+                </span>
+
+                <div class="page-input-container">
+                    <input
+                            type="number"
+                            class="current-page-input"
+                            id="current-page-input"
+                            th:value="${currentPage + 1}"
+                            min="1"
+                            th:max="${collectionPage.totalPages}"
+                    />
+                    <span class="page-separator">/</span>
+                    <span class="total-pages" id="total-pages" th:text="${collectionPage.totalPages}"></span>
+                </div>
+
+                <a class="page-btn next"
+                   th:if="${collectionPage.hasNext()}"
+                   th:href="@{/collections(page=${currentPage + 1}, size=${size})}"
+                >
+                    <span class="material-symbols-rounded">chevron_right</span>
+                </a>
+
+                <span class="page-btn next disabled" th:unless="${collectionPage.hasNext()}">
+                    <span class="material-symbols-rounded">chevron_right</span>
+                </span>
+            </div>
+
+            <a
+                    class="add-collection"
+                    th:if="${isAdmin != null and isAdmin}"
+                    th:href="@{/admin/collections/create}"
+            >
+                <span class="material-symbols-rounded">add</span>
+                <span class="text">New Collection</span>
+            </a>
+        </div>
+
+        <div class="collection-content">
+            <div class="collection-describe">
+                <p
+                        class="collection-describe-text"
+                        id="collection-describe-text"
+                >
+                    Đang tải nội dung collection...
+                </p>
+
+                <div
+                        class="collection-action"
+                        th:if="${isAdmin != null and isAdmin}"
+                >
+                    <a
+                            href="#"
+                            class="collection-action-button"
+                            id="edit-collection"
+                    >
+                        <span class="material-symbols-rounded">edit</span>
+                    </a>
+
+                    <form
+                            method="post"
+                            action="#"
+                            id="delete-collection-form"
+                    >
+                        <input
+                                type="hidden"
+                                th:name="${_csrf.parameterName}"
+                                th:value="${_csrf.token}"
+                        />
+                        <button
+                                type="submit"
+                                class="collection-action-button"
+                                id="delete-collection"
+                                onsubmit="confirmDelete('Bạn có chắc chắn muốn xoa tuyển tập này?')"
+                        >
+                            <span class="material-symbols-rounded">delete_forever</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="collection-topics-title">Bài viết nổi bật</div>
+            <div class="collection-topics" id="collection-topics"></div>
+        </div>
+    </div>
+
+    <div
+            class="collection-empty"
+            th:if="${collectionPage == null or #lists.isEmpty(collectionPage.content)}"
+    >
+        <p>Chưa có collection nào để hiển thị.</p>
+    </div>
+</main>
+
+<th:block layout:fragment="scripts">
+    <script th:src="@{/js/pages/collection/collection-list.js}" defer></script>
+</th:block>
+</body>
+</html>

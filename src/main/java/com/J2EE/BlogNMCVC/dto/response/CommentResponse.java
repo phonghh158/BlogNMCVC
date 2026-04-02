@@ -23,6 +23,7 @@ public class CommentResponse {
     private UUID commenterId;
     private String commenterUsername;
     private String commenterName;
+    private String commenterAvatar;
 
     private UUID topicId;
     private String topicTitle;

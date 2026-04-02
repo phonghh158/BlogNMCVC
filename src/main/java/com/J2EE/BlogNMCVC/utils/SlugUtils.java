@@ -18,12 +18,11 @@ public class SlugUtils {
     }
 
     public static String toUniqueSlug(boolean checkExist, String slug, LocalDateTime time) {
-        if (checkExist) {
+        if (!checkExist) {
             return slug;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH'h'mm'm'ss's'");
-        String timeString = time.format(formatter);
+        String timeString = DateTimeUtils.toStringDateTime(time, "yyyy-MM-dd'T'HH'h'mm'm'ss's'");
 
         return slug + "." + timeString;
     }

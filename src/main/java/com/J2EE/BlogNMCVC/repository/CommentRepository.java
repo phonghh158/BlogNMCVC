@@ -15,4 +15,6 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
     Page<Comment> findAllByUser(User user, Pageable pageable);
 
     Page<Comment> findAllByTopic(Topic topic, Pageable pageable);
+
+    Page<Comment> findAllByTopicAndDeletedAtIsNull(Topic topic, Pageable pageable);
 }

@@ -31,11 +31,11 @@ public class Comment {
     @Column(name = "id", length = 36, nullable = false, updatable = false)
     private UUID id;
 
-    @JdbcTypeCode(SqlTypes.CHAR)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
 
-    @JdbcTypeCode(SqlTypes.CHAR)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

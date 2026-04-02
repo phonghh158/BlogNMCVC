@@ -29,6 +29,7 @@ public class CommentMapper {
                 .commenterId(comment.getUser().getId())
                 .commenterUsername(comment.getUser().getUsername())
                 .commenterName(comment.getUser().getName())
+                .commenterAvatar(comment.getUser().getAvatar())
 
                 .topicId(comment.getTopic().getId())
                 .topicTitle(comment.getTopic().getTitle())

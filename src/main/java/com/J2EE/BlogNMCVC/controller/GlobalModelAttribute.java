@@ -21,4 +21,10 @@ public class GlobalModelAttribute {
     public UserResponse getCurrentUser() {
         return userService.getMe();
     }
+
+    @ModelAttribute("isAdmin")
+    public boolean isAdmin() {
+        return UserUtils.isAuthenticated()
+                && userService.getMe().getRole().name().equals("ADMIN");
+    }
 }
