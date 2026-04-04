@@ -428,6 +428,7 @@ nav .personal .dropdown-button:hover {
 .personal .dropdown-button .text {
     width: fit-content;
     height: fit-content;
+    margin-bottom: 4px;
     font-family: var(--font-title);
     font-size: 18px;
     font-weight: 400;
@@ -467,25 +468,7 @@ nav.collapsed .personal .dropdown-content {
     background-color: var(--color-background);
 }
 
-.personal .dropdown-content .logout-form {
-    display: flex;
-    width: 100%;
-}
-
-.personal .dropdown-content .logout-form .logout-btn {
-    all: unset;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
-    gap: 8px;
-    padding: 0 16px;
-    align-items: center;
-    cursor: pointer;
-}
-
-.personal .dropdown-content a,
-.personal .dropdown-content .logout-form {
+.personal .dropdown-content .personal-link {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -493,32 +476,52 @@ nav.collapsed .personal .dropdown-content {
     gap: 0;
     padding: 0 16px;
     border-radius: 4px;
+    border: none;
+    outline: none;
+    background-color: transparent;
     align-items: center;
     transition: all 0.33s ease;
     overflow: hidden;
     cursor: pointer;
     z-index: 902;
 }
-nav.collapsed .personal .dropdown-content a {
+nav.collapsed .personal .dropdown-content .personal-link {
     padding: 0;
     justify-content: center;
 }
 
-.personal .dropdown-content a:hover {
+.personal .dropdown-content .personal-link:hover {
     padding: 0 12px;
 }
-nav.collapsed .personal .dropdown-content a:hover {
+nav.collapsed .personal .dropdown-content .personal-link:hover {
     padding: 0;
 }
 
-.personal .dropdown-content a .material-symbols-rounded {
+.personal .dropdown-content .personal-link .material-symbols-rounded {
     --icon-opsz: 20;
     font-size: 0;
 }
 
-.personal .dropdown-content a .text {
+.personal .dropdown-content .personal-link .text {
     font-size: 0;
     transition: all 0.33s ease;
+}
+
+.personal .dropdown-content .logout-form .logout-btn {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 0;
+    gap: 0;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    align-items: center;
+    justify-content: flex-start;
+    transition: all 0.33s ease;
+    overflow: hidden;
+    cursor: pointer;
+    z-index: 902;
 }
 
 .personal.active .dropdown-button {
@@ -544,46 +547,54 @@ nav.collapsed .personal.active .dropdown-content {
     height: 96px;
 }
 
-.personal.active .dropdown-content a,
-.personal.active .dropdown-content .logout-form {
+.personal.active .dropdown-content .logout-form .logout-btn,
+.personal.active .dropdown-content .personal-link {
     height: 36px;
     padding: 0 4px;
     gap: 8px;
 }
-nav.collapsed .personal.active .dropdown-content a {
+nav.collapsed .personal.active .dropdown-content .logout-form .logout-btn,
+nav.collapsed .personal.active .dropdown-content .personal-link {
     width: 36px;
     height: 36px;
     padding: 0;
     gap: 0;
+    justify-content: center;
 }
 
-.personal.active .dropdown-content a:hover {
+.personal.active .dropdown-content .personal-link:hover {
     padding: 0 8px;
 }
-nav.collapsed .personal.active .dropdown-content a:hover {
+nav.collapsed .personal.active .dropdown-content .personal-link:hover {
     background-color: var(--color-surface);
 }
 
-.personal.active .dropdown-content a .material-symbols-rounded {
+.personal.active .dropdown-content .logout-form .logout-btn .material-symbols-rounded,
+.personal.active .dropdown-content .personal-link .material-symbols-rounded {
     font-size: 24px;
 }
-.personal.active .dropdown-content a:hover .material-symbols-rounded {
+.personal.active .dropdown-content .logout-form:hover .logout-btn .material-symbols-rounded,
+.personal.active .dropdown-content .personal-link:hover .material-symbols-rounded {
     --icon-opsz: 24;
 }
-nav.collapsed .personal.active .dropdown-content a .material-symbols-rounded {
+nav.collapsed .personal.active .dropdown-content .logout-form .logout-btn .material-symbols-rounded,
+nav.collapsed .personal.active .dropdown-content .personal-link .material-symbols-rounded {
     opacity: 1;
     font-size: 20px;
     --icon-opsz: 20;
 }
-nav.collapsed .personal.active .dropdown-content a:hover .material-symbols-rounded {
+nav.collapsed .personal.active .dropdown-content .logout-form:hover .logout-btn .material-symbols-rounded,
+nav.collapsed .personal.active .dropdown-content .personal-link:hover .material-symbols-rounded {
     --icon-opsz: 20;
 }
 
-.personal.active .dropdown-content a .text {
+.personal.active .dropdown-content .logout-form .logout-btn .text,
+.personal.active .dropdown-content .personal-link .text {
     opacity: 1;
     font-size: 16px;
 }
-nav.collapsed .personal.active .dropdown-content a .text {
+nav.collapsed .personal.active .dropdown-content .logout-form .logout-btn .text,
+nav.collapsed .personal.active .dropdown-content .personal-link .text {
     opacity: 0;
     font-size: 0;
 }

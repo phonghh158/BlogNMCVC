@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" th:href="@{/images/favicon/favicon.ico}" />
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
-    <link rel="stylesheet" th:href="@{/css/authentication.css}" />
+    <link rel="stylesheet" th:href="@{/css/auth/authentication.css}" />
     <title>Authentication</title>
 </head>
 <body>
+<a href="/" class="back-home-btn">
+    <span class="material-symbols-rounded">arrow_back</span>
+    Quay về trang chủ
+</a>
+
 <div class="auth-wrapper">
     <div class="auth-card" id="auth-card">
         <div class="auth-image login-image">
@@ -35,7 +40,7 @@
                 </div>
 
                 <div class="form-actions">
-                    <a href="#" class="forgot-password">Forgot password?</a>
+                    <span class="forgot-password" id="forgot-password-button">Forgot password?</span>
                 </div>
 
                 <button type="submit" class="auth-button">Let's start!</button>
@@ -43,6 +48,19 @@
                 <p class="switch-mode">
                     Don't have an account? <a href="#" id="go-to-signup">Sign up</a>
                 </p>
+            </form>
+
+            <form th:action="@{/auth/reset-password}" method="post" id="reset-password-form" class="reset-password-form">
+                <p>Vui lòng nhập email của bạn để nhận liên kết đặt lại mật khẩu:</p>
+
+                <div class="form-group">
+                    <input type="email" name="email" id="reset-password-email" placeholder="Email của bạn..." required />
+                </div>
+
+                <div class="reset-actions">
+                    <button type="button" class="reset-btn reset-btn-outline" id="cancel-reset-button">Hủy</button>
+                    <button type="submit" class="reset-btn reset-btn-primary">Gửi liên kết</button>
+                </div>
             </form>
         </div>
 
@@ -79,7 +97,7 @@
                 <p th:if="${registerError}" th:text="${registerError}"></p>
                 <p th:if="${registerSuccess}" th:text="${registerSuccess}"></p>
 
-                <button type="submit" class="auth-button">Let's start!</button>
+                <button type="submit" class="auth-button" onclick="notify('Email xác thực tài khoản đã được gửi đến email đăng ký. Cần xác thực để đăng nhập.')">Let's start!</button>
 
                 <p class="switch-mode">
                     Already have an account? <a href="#" id="go-to-login">Log in</a>
@@ -93,7 +111,7 @@
     </div>
 </div>
 
-<script th:src="@{/js/authentication.js}" defer></script>
+<script th:src="@{/js/auth/authentication.js}" defer></script>
 <script th:src="@{/js/index.js}" defer></script>
 </body>
 </html>

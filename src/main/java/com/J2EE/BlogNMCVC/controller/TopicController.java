@@ -57,17 +57,17 @@ public class TopicController {
         Page<TopicResponse> topicPage;
         boolean hasCollections = collectionIds != null && !collectionIds.isEmpty();
 
-        if (hasCollections) {
-            if (isAdmin && status != null) {
+        if (isAdmin) {
+            if (hasCollections) {
                 topicPage = topicService.getAllTopicByCollectionsAndStatus(collectionIds, status, page, size);
             } else {
-                topicPage = topicService.getAllTopicByCollections(collectionIds, page, size);
+                topicPage = topicService.getTopicsByStatus(status, page, size);
             }
         } else {
-            if (isAdmin && status != null) {
-                topicPage = topicService.getTopicsByStatus(status, page, size);
+            if (hasCollections) {
+                topicPage = topicService.getPublishedTopicByCollections(collectionIds, page, size);
             } else {
-                topicPage = topicService.getTopics(page, size);
+                topicPage = topicService.getPublishedTopics(page, size);
             }
         }
 

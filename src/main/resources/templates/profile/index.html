@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html
+        lang="vi"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <th:block layout:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/pages/profile/profile.css}" />
+    </th:block>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="profile-container">
+        <div class="user-profile-card">
+            <div class="user-avatar-wrapper">
+                <img
+                        th:src="${user.avatar != null and !#strings.isEmpty(user.avatar)} ? ${user.avatar} : '/images/default-avatar.jpg'"
+                        alt="User Avatar"
+                />
+            </div>
+
+            <div class="user-info">
+                <h1 class="user-name" th:text="${user.name}">Bách Chi</h1>
+
+                <span class="user-username" th:text="'@' + ${user.username}">
+                    @nhacohyun
+                </span>
+
+                <p
+                        class="user-bio"
+                        th:text="${user.bio != null and !#strings.isEmpty(user.bio)} ? ${user.bio} : 'Chưa có giới thiệu nào.'"
+                >
+                    Xin chào! Tôi là một người yêu thích viết lách...
+                </p>
+
+                <div class="user-actions">
+                    <a class="profile-btn btn-edit" type="button" th:if="${isOwner}" th:href="@{/profile/edit}">
+                        <span class="material-symbols-rounded">edit</span>
+                        Chỉnh sửa hồ sơ
+                    </a>
+
+                    <a
+                            class="profile-btn btn-delete"
+                            type="button"
+                            th:if="${isAdmin && !isOwner}"
+                    >
+                        <span class="material-symbols-rounded">block</span>
+                        Ban Account
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="bookmarked-section">
+            <div class="bookmarked-section-header">
+                <span class="material-symbols-rounded">bookmark</span>
+                <span>Bookmarks</span>
+            </div>
+
+            <div class="topic-list" th:if="${topics != null and !topics.isEmpty()}">
+                <a
+                        class="topic-card"
+                        th:each="topic : ${topics}"
+                        th:href="@{/topics/{slug}(slug=${topic.slug})}"
+                >
+                    <div
+                            class="topic-image"
+                            th:if="${topic.thumbnail != null and !#strings.isEmpty(topic.thumbnail)}"
+                    >
+                        <img th:src="${topic.thumbnail}" th:alt="${topic.title}" />
+                    </div>
+
+                    <div class="topic-meta">
+                        <span class="topic-collection"
+                              th:text="${topic.collectionName}">
+                        </span>
+
+                        <span class="topic-date"
+                              th:text="${topic.publishedAt != null ? #temporals.format(topic.publishedAt, 'dd ''Th''MM, yyyy') : ''}">
+                        </span>
+                    </div>
+
+                    <span class="topic-title" th:text="${topic.title}"></span>
+
+                    <span class="topic-summary"
+                          th:text="${#strings.abbreviate(topic.content, 120)}">
+                    </span>
+                </a>
+            </div>
+
+            <div class="empty-bookmark" th:if="${topics == null or topics.isEmpty()}">
+                Chưa có bookmark nào.
+            </div>
+
+            <div class="pagination" th:if="${bookmark != null and bookmark.totalPages > 1}">
+                <a
+                        class="page-btn prev"
+                        th:if="${bookmark.hasPrevious() and isOwner}"
+                        th:href="@{/profile(page=${bookmark.number - 1}, size=${bookmark.size})}"
+                >
+                    <span class="material-symbols-rounded">chevron_left</span>
+                </a>
+
+                <a
+                        class="page-btn prev"
+                        th:if="${bookmark.hasPrevious() and !isOwner}"
+                        th:href="@{/profile/{username}(username=${user.username}, page=${bookmark.number - 1}, size=${bookmark.size})}"
+                >
+                    <span class="material-symbols-rounded">chevron_left</span>
+                </a>
+
+                <span class="page-btn prev disabled" th:unless="${bookmark.hasPrevious()}">
+                    <span class="material-symbols-rounded">chevron_left</span>
+                </span>
+
+                <div class="page-input-container">
+                    <input
+                            type="number"
+                            class="current-page-input"
+                            id="current-page-input"
+                            th:value="${bookmark.number + 1}"
+                            min="1"
+                            th:max="${bookmark.totalPages}"
+                    />
+                    <span class="page-separator">/</span>
+                    <span
+                            class="total-pages"
+                            id="total-pages"
+                            th:text="${bookmark.totalPages}"
+                    > 1 </span>
+                </div>
+
+                <a
+                        class="page-btn next"
+                        th:if="${bookmark.hasNext() and isOwner}"
+                        th:href="@{/profile(page=${bookmark.number + 1}, size=${bookmark.size})}"
+                >
+                    <span class="material-symbols-rounded">chevron_right</span>
+                </a>
+
+                <a
+                        class="page-btn next"
+                        th:if="${bookmark.hasNext() and !isOwner}"
+                        th:href="@{/profile/{username}(username=${user.username}, page=${bookmark.number + 1}, size=${bookmark.size})}"
+                >
+                    <span class="material-symbols-rounded">chevron_right</span>
+                </a>
+
+                <span class="page-btn next disabled" th:unless="${bookmark.hasNext()}">
+                    <span class="material-symbols-rounded">chevron_right</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</main>
+<th:block layout:fragment="scripts">
+    <script th:src="@{/js/pages/profile/profile.js}" defer></script>
+</th:block>
+</body>
+</html>

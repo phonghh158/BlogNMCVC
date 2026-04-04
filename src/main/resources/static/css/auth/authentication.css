@@ -101,6 +101,7 @@ p {
     font-size: 14px;
     color: var(--color-text-secondary);
     transition: color 0.33s ease;
+    cursor: pointer;
 }
 
 .forgot-password:hover {
@@ -210,6 +211,143 @@ p {
 .auth-card.sign-up-mode .signup-image {
     right: 0;
     opacity: 1;
+}
+
+/* --- Nút Quay về trang chủ (Back to Home) --- */
+.back-home-btn {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px 10px 16px;
+    border-radius: 999px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-secondary);
+    color: var(--color-text);
+    font-family: var(--font-text);
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.33s ease;
+    z-index: 1000;
+}
+
+.back-home-btn .material-symbols-rounded {
+    font-size: 22px;
+    --icon-opsz: 22;
+    transition: transform 0.33s ease;
+}
+
+.back-home-btn:hover {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgb(from var(--color-text) r g b / 0.15);
+}
+
+.back-home-btn:hover .material-symbols-rounded {
+    transform: translateX(-4px);
+    color: var(--color-text-inverse);
+}
+
+/* --- Form Đặt lại mật khẩu (Mặc định ẨN) --- */
+.reset-password-form {
+    position: fixed;
+    display: none; /* Giấu form đi */
+    flex-direction: column;
+    gap: 16px;
+    margin: 24px;
+    padding: 24px;
+    background-color: var(--color-surface);
+    border-radius: 12px;
+    border: 2px dashed var(--color-secondary);
+    animation: fadeInDown 0.33s ease forwards;
+}
+
+.reset-password-form.show {
+    display: flex;
+}
+
+.reset-password-form p {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+.reset-password-form input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--color-secondary);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-text);
+    font-size: 16px;
+    outline: none;
+    transition: all 0.33s ease;
+}
+
+.reset-password-form input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgb(from var(--color-primary) r g b / 0.1);
+}
+
+/* Nút bấm trong form Reset */
+.reset-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.reset-btn {
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.33s ease;
+}
+.reset-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.reset-btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    border: 1px solid var(--color-primary);
+}
+
+.reset-btn-primary:hover {
+    background-color: transparent;
+    color: var(--color-primary);
+}
+
+.reset-btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--color-text-secondary);
+    color: var(--color-text-secondary);
+}
+
+.reset-btn-outline:hover {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border-color: var(--color-text);
+}
+
+/* Keyframes cho hiệu ứng trượt xuống */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Media Query */

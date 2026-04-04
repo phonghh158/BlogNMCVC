@@ -81,70 +81,9 @@ public class TopicService {
 
     // READ
     // Read All
-    public Page<TopicResponse> getTopics(int page, int size) {
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by("createdAt").descending()
-        );
-
-        return topicRepository.findAllByDeletedAtIsNull(pageable).map(topicMapper::toResponse);
-    }
-
-    public Page<TopicResponse> getTopicsForAdmin(int page, int size) {
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by("createdAt").descending()
-        );
-
-        return topicRepository.findAll(pageable).map(topicMapper::toResponse);
-    }
-
-    public Page<TopicResponse> getTopicsByCollectionForAdmin(UUID id, int page, int size) {
-        Collection collection = collectionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Collection not found"));
-
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by("createdAt").descending()
-        );
-
-        return topicRepository.findAllByCollection(collection, pageable).map(topicMapper::toResponse);
-    }
-
-    public Page<TopicResponse> getTopicsByStatus(TopicStatus status, int page, int size) {
-        if (status == null) {
-            throw new IllegalArgumentException("status must not be null");
-        }
-
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by("createdAt").descending()
-        );
-
-        return topicRepository.findAllByStatus(status, pageable).map(topicMapper::toResponse);
-    }
-
-    public Page<TopicResponse> getTopicsByCollectionAndStatus(UUID collectionId, TopicStatus status, int page, int size) {
-        Collection collection = collectionRepository.findById(collectionId).orElseThrow(() -> new IllegalArgumentException("Collection not found"));
-
-        if (status == null) {
-            throw new IllegalArgumentException("status must not be null");
-        }
-
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by("createdAt").descending()
-        );
-
-        return topicRepository.findAllByCollectionAndStatus(collection, status, pageable).map(topicMapper::toResponse);
-    }
-
-    public List<TopicResponse> getFeaturedTopicsByCollection(UUID id, int size) {
-        Collection collection = collectionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Collection not found"));
+    public List<TopicResponse> getFeaturedTopicsByCollection(UUID collectionId, int size) {
+        Collection collection = collectionRepository.findById(collectionId)
+                .orElseThrow(() -> new IllegalArgumentException("Collection not found"));
 
         Pageable pageable = PageRequest.of(
                 0,
@@ -152,31 +91,9 @@ public class TopicService {
                 Sort.by("publishedAt").descending()
         );
 
-        Page<TopicResponse> topics = topicRepository.findAllByCollectionAndDeletedAtIsNull(collection, pageable)
-                .map(topicMapper::toResponse);
+        Page<TopicResponse> topics = topicRepository.findAllByCollectionAndDeletedAtIsNull(collection, pageable).map(topicMapper::toResponse);
 
         return topics.getContent();
-    }
-
-    public Page<TopicResponse> getAllTopicByCollections(List<UUID> collectionIds, int page, int size) {
-        if (collectionIds == null || collectionIds.isEmpty()) {
-            throw new IllegalArgumentException("Collection ids must not be empty");
-        }
-
-        List<Collection> collections = collectionRepository.findAllById(collectionIds);
-
-        if (collections.isEmpty()) {
-            throw new IllegalArgumentException("Collections not found");
-        }
-
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by("createdAt").descending()
-        );
-
-        return topicRepository.findAllByCollectionInAndDeletedAtIsNull(collections, pageable)
-                .map(topicMapper::toResponse);
     }
 
     public Page<TopicResponse> getAllTopicByCollectionsAndStatus(List<UUID> collectionIds, TopicStatus status, int page, int size) {
@@ -184,8 +101,43 @@ public class TopicService {
             throw new IllegalArgumentException("Collection ids must not be empty");
         }
 
+        List<Collection> collections = collectionRepository.findAllById(collectionIds);
+
+        if (collections.isEmpty()) {
+            throw new IllegalArgumentException("Collections not found");
+        }
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("publishedAt").descending()
+        );
+
         if (status == null) {
-            throw new IllegalArgumentException("Status must not be null");
+            return topicRepository.findAllByCollectionIn(collections, pageable).map(topicMapper::toResponse);
+        }
+
+        return topicRepository.findAllByCollectionInAndStatus(collections, status, pageable)
+                .map(topicMapper::toResponse);
+    }
+
+    public Page<TopicResponse> getTopicsByStatus(TopicStatus status, int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("publishedAt").descending()
+        );
+
+        if (status == null) {
+            return topicRepository.findAll(pageable).map(topicMapper::toResponse);
+        }
+
+        return topicRepository.findAllByStatus(status, pageable).map(topicMapper::toResponse);
+    }
+
+    public Page<TopicResponse> getPublishedTopicByCollections(List<UUID> collectionIds, int page, int size) {
+        if (collectionIds == null || collectionIds.isEmpty()) {
+            throw new IllegalArgumentException("Collection ids must not be empty");
         }
 
         List<Collection> collections = collectionRepository.findAllById(collectionIds);
@@ -197,11 +149,21 @@ public class TopicService {
         Pageable pageable = PageRequest.of(
                 page,
                 size,
-                Sort.by("createdAt").descending()
+                Sort.by("publishedAt").descending()
         );
 
-        return topicRepository.findAllByCollectionInAndStatus(collections, status, pageable)
+        return topicRepository.findAllByCollectionInAndStatusAndDeletedAtIsNull(collections, TopicStatus.PUBLISHED, pageable)
                 .map(topicMapper::toResponse);
+    }
+
+    public Page<TopicResponse> getPublishedTopics(int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("publishedAt").descending()
+        );
+
+        return topicRepository.findAllByStatusAndDeletedAtIsNull(TopicStatus.PUBLISHED, pageable).map(topicMapper::toResponse);
     }
 
     // Read One
@@ -255,6 +217,11 @@ public class TopicService {
 
         if (thumbnail != null && !thumbnail.isEmpty()) {
             UploadResponse uploadResponse = uploadService.uploadImage(thumbnail, "topics");
+
+            if (uploadResponse == null) {
+                throw new IllegalArgumentException("Thumbnail can not upload");
+            }
+
             thumbnailUrl = uploadResponse.getSecureUrl();
         }
 

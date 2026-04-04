@@ -82,13 +82,25 @@ public class BookmarkService {
     }
 
 
-    public Page<BookmarkResponse> findAllByUser(int page, int size) {
+    public Page<BookmarkResponse> findAllByMe(int page, int size) {
         UUID userId = UserUtils.getCurrentUserId();
 
         if (userId == null) {
             throw new UsernameNotFoundException("User Not Found");
         }
 
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("Cannot find user with id: " + userId));
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("createdAt").descending()
+        );
+
+        return bookmarkRepository.findAllByUser(user, pageable).map(bookmarkMapper::toResponse);
+    }
+
+    public Page<BookmarkResponse> findAllByUser(UUID userId, int page, int size) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("Cannot find user with id: " + userId));
 
         Pageable pageable = PageRequest.of(

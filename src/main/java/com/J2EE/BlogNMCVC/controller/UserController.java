@@ -1,4 +1,266 @@
 package com.J2EE.BlogNMCVC.controller;
 
+import com.J2EE.BlogNMCVC.dto.request.ChangeUsernameRequest;
+import com.J2EE.BlogNMCVC.dto.response.BookmarkResponse;
+import com.J2EE.BlogNMCVC.dto.response.TopicResponse;
+import com.J2EE.BlogNMCVC.dto.response.UserResponse;
+import com.J2EE.BlogNMCVC.service.BookmarkService;
+import com.J2EE.BlogNMCVC.service.TopicService;
+import com.J2EE.BlogNMCVC.service.UserService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Controller
+@Validated
 public class UserController {
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private BookmarkService bookmarkService;
+
+    @Autowired
+    private TopicService topicService;
+
+    @GetMapping("/profile")
+    public String getMyProfile(
+            @RequestParam(defaultValue = "0") int page,
+            Model model
+    ) {
+        UserResponse user = userService.getMe();
+
+        if (user == null) {
+            return "redirect:/authentication";
+        }
+
+        Page<BookmarkResponse> bookmark = bookmarkService.findAllByMe(page, 6);
+
+        List<TopicResponse> topics = new ArrayList<>();
+
+        for (BookmarkResponse item : bookmark.getContent()) {
+            TopicResponse topic = topicService.getTopicById(item.getTopicId());
+
+            if (topic != null) {
+                topics.add(topic);
+            }
+        }
+
+        model.addAttribute("pageTitle", "My Profile");
+        model.addAttribute("user", user);
+        model.addAttribute("bookmark", bookmark);
+        model.addAttribute("topics", topics);
+        model.addAttribute("isOwner", true);
+
+        return "profile/index";
+    }
+
+    @GetMapping("/profile/{username}")
+    public String getPublicProfile(
+            @PathVariable
+            @NotBlank(message = "Username must not be blank")
+            @Size(max = 16, message = "Username must not exceed 16 characters")
+            String username,
+            @RequestParam(defaultValue = "0") int page,
+            Model model
+    ) {
+        UserResponse user = userService.getPublicUserByUsername(username);
+
+        Page<BookmarkResponse> bookmark = bookmarkService.findAllByUser(user.getId(), page, 6);
+
+        List<TopicResponse> topics = new ArrayList<>();
+
+        for (BookmarkResponse item : bookmark.getContent()) {
+            TopicResponse topic = topicService.getTopicById(item.getTopicId());
+
+            if (topic != null) {
+                topics.add(topic);
+            }
+        }
+
+        model.addAttribute("pageTitle", "Profile");
+        model.addAttribute("user", user);
+        model.addAttribute("bookmark", bookmark);
+        model.addAttribute("topics", topics);
+        model.addAttribute("isOwner", false);
+
+        return "profile/index";
+    }
+
+    @GetMapping("/profile/edit")
+    public String showEditProfileForm(Model model) {
+        UserResponse user = userService.getMe();
+
+        if (user == null) {
+            return "redirect:/authentication";
+        }
+
+        model.addAttribute("pageTitle", "Chỉnh sửa hồ sơ");
+        model.addAttribute("user", user);
+        model.addAttribute("isOwner", true);
+
+        return "profile/form";
+    }
+
+    @GetMapping("/admin/users/id/{id}")
+    public String getUserByIdForAdmin(
+            @PathVariable UUID id,
+            Model model
+    ) {
+        UserResponse user = userService.getUserById(id);
+
+        model.addAttribute("profileUser", user);
+        model.addAttribute("isOwner", false);
+
+        return "profile/index";
+    }
+
+    @GetMapping("/admin/users/username/{username}")
+    public String getUserByUsernameForAdmin(
+            @PathVariable
+            @NotBlank(message = "Username must not be blank")
+            @Size(max = 16, message = "Username must not exceed 16 characters")
+            String username,
+            Model model
+    ) {
+        UserResponse user = userService.getUserByUsername(username);
+
+        model.addAttribute("profileUser", user);
+        model.addAttribute("isOwner", false);
+
+        return "profile/index";
+    }
+
+    @PostMapping("/profile/edit/name")
+    public String updateName(
+            @RequestParam
+            @NotBlank(message = "Name must not be blank")
+            @Size(max = 96, message = "Name must not exceed 96 characters")
+            String name,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            userService.updateName(name);
+            redirectAttributes.addFlashAttribute("successMessage", "Update name successfully!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/profile/edit";
+    }
+
+    @PostMapping("/profile/edit/avatar")
+    public String updateAvatar(
+            @RequestParam("avatar") MultipartFile avatar,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (avatar == null || avatar.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Avatar must not be empty!");
+            return "redirect:/profile/edit";
+        }
+
+        if (avatar.getContentType() == null || !avatar.getContentType().startsWith("image/")) {
+            redirectAttributes.addFlashAttribute("errorMessage", "File must be an image!");
+            return "redirect:/profile/edit";
+        }
+
+        try {
+            userService.updateAvatar(avatar);
+            redirectAttributes.addFlashAttribute("successMessage", "Update avatar successfully!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/profile/edit";
+    }
+
+    @PostMapping("/profile/edit/bio")
+    public String updateBio(
+            @RequestParam(required = false)
+            @Size(max = 512, message = "Bio must not exceed 5000 characters")
+            String bio,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            userService.updateBio(bio);
+            redirectAttributes.addFlashAttribute("successMessage", "Update bio successfully!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/profile/edit";
+    }
+
+    @PostMapping("/profile/edit/username")
+    public String changeUsername(
+            @Valid ChangeUsernameRequest req,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    bindingResult.getFieldError() != null
+                            ? bindingResult.getFieldError().getDefaultMessage()
+                            : "Invalid data!"
+            );
+            return "redirect:/profile/edit";
+        }
+
+        try {
+            userService.changeUsername(req);
+            redirectAttributes.addFlashAttribute("successMessage", "Change username successfully!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/profile/edit";
+    }
+
+    @PostMapping("/profile/edit/lock")
+    public String lockAccount(RedirectAttributes redirectAttributes) {
+        try {
+            userService.lockAccount();
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Confirmation email has been sent. Please check your email to lock your account."
+            );
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/profile/edit";
+    }
+
+    @GetMapping("/auth/lock-account")
+    public String confirmLockAccount(
+            @RequestParam("token") String token,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            userService.confirmLockAccount(token);
+            return "redirect:/logout";
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/profile/edit";
+        }
+    }
 }

@@ -54,20 +54,20 @@ public class MailService {
         mailSender.send(message);
     }
 
-    public void sendChangeEmailEmail(String toEmail, String name, String verifyLink) {
+    public void sendLockAccountEmail(String toEmail, String name, String verifyLink) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromEmail);
         message.setTo(toEmail);
-        message.setSubject("Xác thực email thay đổi mật khẩu");
+        message.setSubject("Xác nhận khóa tài khoản tại blog");
         message.setText("""
                 Xin chào %s,
 
-                Có người yêu cầu thay đổi email sang email này trên blog NMCVC
-                Nhấn vào link bên dưới để xác thực email:
+                Có người yêu cầu khóa tài khoản trên blog NMCVC
+                Nhấn vào link bên dưới để xác nhận:
 
                 %s
 
-                Link xác thực có thời hạn 15 phút.
+                Link xác nhận có thời hạn 15 phút.
                 Nếu không phải cậu, hãy bỏ qua email này.
                 """.formatted(name, verifyLink));
 

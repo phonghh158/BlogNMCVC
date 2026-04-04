@@ -22,9 +22,11 @@
 
         <h1 class="not-found-code">404</h1>
 
-        <p class="not-found-message">
-            Chủ nhà đang đi dạo, mọi người vào Nhà ngồi chơi, đợi chút nha!
-        </p>
+        <p
+                class="not-found-message"
+                id="not-found-message"
+                th:text="${errorMessage != null ? errorMessage : 'Chủ nhà đang đi dạo, mọi người vào Nhà ngồi chơi, đợi chút nha!'}"
+        ></p>
 
         <a th:href="@{/}" class="back-home-button">
             <span class="material-symbols-rounded">home</span>

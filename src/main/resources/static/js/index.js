@@ -81,6 +81,10 @@ function confirmDelete(confirmString) {
     return confirm(confirmString);
 }
 
+function notify(noti) {
+    return alert(noti);
+}
+
 // Device Screen Dimension
 const screenDisplay = document.getElementById("device-screen-dimension");
 

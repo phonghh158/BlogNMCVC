@@ -83,55 +83,24 @@
     <section class="collections-section" id="collections">
         <span class="section-title">Featured Collections</span>
         <div class="collection-cards">
-            <div class="collection-card active" id="collection-1">
+            <div
+                    class="collection-card"
+                    th:each="c, iterStat : ${featuredCollections}"
+                    th:classappend="${iterStat.index == 0} ? 'active'"
+            >
                 <div class="collection-icon">
-                    <span class="material-symbols-rounded">routine</span>
+                    <span class="material-symbols-rounded"> interests </span>
                 </div>
 
-                <span class="collection-title">Trốn nắng hẹn trăng</span>
+                <span
+                        class="collection-title"
+                        th:text="${c.name}"
+                ></span>
 
-                <span class="collection-description">
-                            Tuyển tập văn xuôi đầu tiên của Nhà, viết về Hyun và Hyun cũng
-                            là chàng thơ duy nhất.
-                        </span>
-
-                <a class="collection-card-button">
-                    <span class="material-symbols-rounded">chevron_forward</span>
-                </a>
-            </div>
-
-            <div class="collection-card" id="collection-2">
-                <div class="collection-icon">
-                    <span class="material-symbols-rounded">routine</span>
-                </div>
-
-                <span class="collection-title">Trốn nắng hẹn trăng</span>
-
-                <span class="collection-description">
-                            Tuyển tập văn xuôi đầu tiên của Nhà, viết về Hyun và Hyun cũng
-                            là chàng thơ duy nhất.
-                        </span>
-
-                <a class="collection-card-button">
-                    <span class="material-symbols-rounded">chevron_forward</span>
-                </a>
-            </div>
-
-            <div class="collection-card" id="collection-3">
-                <div class="collection-icon">
-                    <span class="material-symbols-rounded">routine</span>
-                </div>
-
-                <span class="collection-title">Trốn nắng hẹn trăng</span>
-
-                <span class="collection-description">
-                            Tuyển tập văn xuôi đầu tiên của Nhà, viết về Hyun và Hyun cũng
-                            là chàng thơ duy nhất.
-                        </span>
-
-                <a class="collection-card-button">
-                    <span class="material-symbols-rounded">chevron_forward</span>
-                </a>
+                <span
+                        class="collection-description"
+                        th:text="${c.description}"
+                ></span>
             </div>
 
             <div class="collection-slider-controls">
@@ -154,94 +123,40 @@
     <section class="topics-section" id="topics">
         <span class="section-title">Featured Topics</span>
         <div class="topic-cards">
-            <a class="topic-card active" id="topic-1">
+            <a
+                    class="topic-card"
+                    th:each="t, iterStat : ${featuredTopics}"
+                    th:classappend="${iterStat.index == 0} ? 'active'"
+                    th:href="@{/topics/{slug}(slug=${t.slug})}"
+            >
                 <div class="topic-image">
-                    <img th:src="@{/images/homepage/topics/topic-1.png}" alt="" />
+                    <img
+                            th:src="@{${t.thumbnail != null and !#strings.isEmpty(t.thumbnail) ? t.thumbnail : '/images/homepage/topics/topic.png'}}"
+                            th:alt="${t.slug}"
+                    />
                 </div>
-                <div class="topic-meta">
-                    <span class="topic-collection">Trốn nắng hẹn trăng</span>
-                    <span class="topic-date">12 Th03, 2026</span>
-                </div>
-                <span class="topic-title">Bài viết số 1</span>
-                <span class="topic-summary">
-                            Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet
-                            consectetur adipiscing elit quisque faucibus ex.
-                        </span>
-            </a>
 
-            <a class="topic-card" id="topic-2">
-                <div class="topic-image">
-                    <img th:src="@{/images/homepage/topics/topic-1.png}" alt="" />
-                </div>
                 <div class="topic-meta">
-                    <span class="topic-collection">Thẩn thẩn thơ thơ</span>
-                    <span class="topic-date">10 Th03, 2026</span>
-                </div>
-                <span class="topic-title">Bài viết số 2</span>
-                <span class="topic-summary">
-                            Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet
-                            consectetur adipiscing elit quisque faucibus ex.
-                        </span>
-            </a>
+                    <span
+                            class="topic-collection"
+                            th:text="${t.collection.name}"
+                    ></span>
 
-            <a class="topic-card" id="topic-3">
-                <div class="topic-image">
-                    <img th:src="@{/images/homepage/topics/topic-1.png}" alt="" />
+                    <span
+                            class="topic-date"
+                            th:text="${#temporals.format(t.publishedAt, 'dd ''Th''MM, yyyy')}"
+                    ></span>
                 </div>
-                <div class="topic-meta">
-                    <span class="topic-collection">Hyun đã ở đây</span>
-                    <span class="topic-date">08 Th03, 2026</span>
-                </div>
-                <span class="topic-title">Bài viết số 3</span>
-                <span class="topic-summary">
-                            Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet
-                            consectetur adipiscing elit quisque faucibus ex.
-                        </span>
-            </a>
 
-            <a class="topic-card" id="topic-4">
-                <div class="topic-image">
-                    <img th:src="@{/images/homepage/topics/topic-1.png}" alt="" />
-                </div>
-                <div class="topic-meta">
-                    <span class="topic-collection">Người kể chuyện nhà</span>
-                    <span class="topic-date">05 Th03, 2026</span>
-                </div>
-                <span class="topic-title">Bài viết số 4</span>
-                <span class="topic-summary">
-                            Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet
-                            consectetur adipiscing elit quisque faucibus ex.
-                        </span>
-            </a>
+                <span
+                        class="topic-title"
+                        th:text="${t.title}"
+                ></span>
 
-            <a class="topic-card" id="topic-5">
-                <div class="topic-image">
-                    <img th:src="@{/images/homepage/topics/topic-1.png}" alt="" />
-                </div>
-                <div class="topic-meta">
-                    <span class="topic-collection">Chuyện để dành</span>
-                    <span class="topic-date">01 Th03, 2026</span>
-                </div>
-                <span class="topic-title">Bài viết số 5</span>
-                <span class="topic-summary">
-                            Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet
-                            consectetur adipiscing elit quisque faucibus ex.
-                        </span>
-            </a>
-
-            <a class="topic-card" id="topic-6">
-                <div class="topic-image">
-                    <img th:src="@{/images/homepage/topics/topic-1.png}" alt="" />
-                </div>
-                <div class="topic-meta">
-                    <span class="topic-collection">Nằm nghe Hyun nói</span>
-                    <span class="topic-date">28 Th02, 2026</span>
-                </div>
-                <span class="topic-title">Bài viết số 6</span>
-                <span class="topic-summary">
-                            Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet
-                            consectetur adipiscing elit quisque faucibus ex.
-                        </span>
+                <span
+                        class="topic-summary"
+                        th:text="${#strings.abbreviate(t.content, 156)}"
+                ></span>
             </a>
 
             <div class="topic-slider-controls">

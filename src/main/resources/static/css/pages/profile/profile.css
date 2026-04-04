@@ -1,0 +1,330 @@
+/* css/profile.css */
+
+/* --- Profile Container --- */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 56px;
+    margin-top: 96px;
+    margin-bottom: 48px;
+}
+
+/* --- User Info Card --- */
+.user-profile-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 48px;
+    padding: 48px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-secondary);
+    border-radius: 24px;
+    transition: all 0.33s ease;
+}
+
+.user-profile-card:hover {
+    box-shadow: 0 16px 48px rgb(from var(--color-text) r g b / 0.08);
+    border-color: color-mix(in srgb, var(--color-primary) 60%, transparent);
+}
+
+/* Avatar */
+.user-avatar-wrapper {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    padding: 8px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    justify-content: center;
+    align-items: center;
+}
+
+.user-avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--color-surface);
+}
+
+/* Info Text */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    cursor: default;
+}
+
+.user-info .user-name {
+    font-family: var(--font-title);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 4px;
+}
+
+.user-info .user-username {
+    font-family: var(--font-code);
+    font-size: 18px;
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.user-info .user-bio {
+    font-family: var(--font-text);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin-bottom: 32px;
+    max-width: 84%;
+}
+
+/* Action Buttons */
+.user-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+}
+
+.profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border-radius: 999px;
+    font-family: var(--font-text);
+    font-size: 16px;
+    font-weight: 500;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.33s ease;
+}
+
+.profile-btn .material-symbols-rounded {
+    font-size: 20px;
+    --icon-opsz: 20;
+}
+
+/* Edit Button (Màu Primary) */
+.btn-edit {
+    background-color: var(--color-primary);
+    border: 1px solid transparent;
+    color: var(--color-text-inverse);
+}
+
+.btn-edit:hover {
+    background-color: var(--color-surface);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    box-shadow: 0 2px 4px rgb(from var(--color-text) r g b / 0.33);
+}
+
+.btn-edit .material-symbols-rounded {
+    color: var(--color-text-inverse);
+}
+.btn-edit:hover .material-symbols-rounded {
+    --icon-fill: 1;
+    color: var(--color-primary);
+}
+
+/* Delete Button (Màu xám/phụ) */
+.btn-delete {
+    background-color: transparent;
+    border: 1px solid var(--color-text-secondary);
+    color: var(--color-text-secondary);
+}
+
+.btn-delete:hover {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border-color: var(--color-text);
+}
+
+/* --- Bookmarks Section --- */
+.bookmarked-section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    font-family: var(--font-title);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--color-text);
+    cursor: default;
+}
+
+.bookmarked-section-header .material-symbols-rounded {
+    margin-top: 10px;
+    font-size: 30px;
+    color: var(--color-primary);
+    --icon-fill: 1;
+    --icon-opsz: 30;
+}
+
+/* --- CSS copy từ topics-list --- */
+.topic-list {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;
+    width: 100%;
+    justify-content: flex-start;
+    transition: all 0.33s ease;
+}
+
+.topic-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 calc(33.333% - 24px);
+    min-width: 320px;
+    padding: 16px;
+    border-radius: 16px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-secondary);
+    gap: 12px;
+    transition: all 0.33s ease;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.topic-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--color-primary);
+    box-shadow: 0 8px 24px rgb(from var(--color-text) r g b / 0.11);
+}
+
+.topic-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.topic-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.33s ease;
+}
+
+.topic-card:hover .topic-image img {
+    transform: scale(1.1);
+}
+
+.topic-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: -4px;
+}
+
+.topic-collection {
+    font-family: var(--font-text);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.66px;
+}
+
+.topic-date {
+    font-family: var(--font-text);
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+.topic-title {
+    font-family: var(--font-title);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.topic-summary {
+    font-family: var(--font-text);
+    font-size: 16px;
+    color: var(--color-text-secondary);
+    text-align: justify;
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* --- Pagination Custom (Phân trang Bookmarks) --- */
+.pagination {
+    display: flex;
+    width: 100%;
+    height: max-content;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 36px;
+}
+
+.page-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid var(--color-secondary);
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: all 0.33s ease;
+}
+
+.page-btn:hover {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    border-color: var(--color-primary);
+}
+
+.page-input-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-text);
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.current-page-input {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border-radius: 4px;
+    border: 1px solid var(--color-secondary);
+    background-color: var(--color-background);
+    color: var(--color-primary);
+    font-family: var(--font-text);
+    font-size: 18px;
+    outline: none;
+}
+
+.current-page-input::-webkit-inner-spin-button,
+.current-page-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.page-separator {
+    font-size: 18px;
+    color: var(--color-text-secondary);
+    cursor: default;
+}
+
+.total-pages {
+    font-size: 18px;
+    color: var(--color-text);
+    cursor: default;
+}

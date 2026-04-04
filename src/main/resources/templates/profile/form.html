@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html
+        lang="vi"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <th:block layout:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/pages/profile/form.css}" />
+    </th:block>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="edit-profile-container" id="profile-container">
+        <form
+                class="avatar-section"
+                id="form-avatar"
+                th:action="@{/profile/edit/avatar}"
+                method="post"
+                enctype="multipart/form-data"
+        >
+            <div class="avatar-upload-box" id="avatar-box">
+                <img
+                        th:src="${user.avatar != null and !#strings.isEmpty(user.avatar)} ? ${user.avatar} : '/images/default-avatar.jpg'"
+                        alt="Avatar"
+                        class="avatar-preview"
+                        id="avatar-preview"
+                />
+
+                <div class="avatar-overlay">
+                    <span class="material-symbols-rounded">add_a_photo</span>
+                    <span class="overlay-text">Upload Avatar</span>
+                </div>
+
+                <input
+                        type="file"
+                        id="avatar-input"
+                        name="avatar"
+                        accept="image/*"
+                />
+            </div>
+
+            <div class="avatar-actions" id="avatar-actions">
+                <button
+                        type="button"
+                        class="btn btn-outline"
+                        id="btn-cancel-avatar"
+                >
+                    Hủy
+                </button>
+                <button type="submit" class="btn btn-primary">Lưu ảnh</button>
+            </div>
+        </form>
+
+        <div class="fields-section">
+            <div class="editable-field" id="field-name">
+                <div class="field-header">
+                    <span class="field-label">Tên hiển thị</span>
+                    <button type="button" class="btn-icon-only btn-trigger-edit">
+                        <span class="material-symbols-rounded">edit</span>
+                    </button>
+                </div>
+
+                <div class="field-view">
+                    <span class="field-text" th:text="${user.name}">Bách Chi</span>
+                </div>
+
+                <form class="field-edit" th:action="@{/profile/edit/name}" method="post">
+                    <input
+                            type="text"
+                            name="name"
+                            class="edit-input"
+                            th:value="${user.name}"
+                            maxlength="96"
+                            required
+                    />
+                    <div class="field-actions">
+                        <button
+                                type="button"
+                                class="btn btn-outline btn-cancel-edit"
+                        >
+                            Hủy
+                        </button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="editable-field" id="field-username">
+                <div class="field-header">
+                    <span class="field-label">Username</span>
+                    <button type="button" class="btn-icon-only btn-trigger-edit">
+                        <span class="material-symbols-rounded">edit</span>
+                    </button>
+                </div>
+
+                <div class="field-view">
+                    <span class="field-text code-font" th:text="'@' + ${user.username}">
+                        @nhacohyun
+                    </span>
+                </div>
+
+                <form class="field-edit" th:action="@{/profile/edit/username}" method="post">
+                    <input
+                            type="text"
+                            name="username"
+                            class="edit-input code-font"
+                            th:value="${user.username}"
+                            maxlength="16"
+                            required
+                    />
+
+                    <div class="password-confirm-box">
+                        <label for="password">Xác nhận mật khẩu để đổi Username:</label>
+                        <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="edit-input"
+                                placeholder="Mật khẩu..."
+                                required
+                        />
+                    </div>
+
+                    <div class="field-actions">
+                        <button
+                                type="button"
+                                class="btn btn-outline btn-cancel-edit"
+                        >
+                            Hủy
+                        </button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="editable-field" id="field-bio">
+                <div class="field-header">
+                    <span class="field-label">Tiểu sử</span>
+                    <button type="button" class="btn-icon-only btn-trigger-edit">
+                        <span class="material-symbols-rounded">edit</span>
+                    </button>
+                </div>
+
+                <div class="field-view">
+                    <span
+                            class="field-text"
+                            th:text="${user.bio != null and !#strings.isEmpty(user.bio)} ? ${user.bio} : 'Chưa có tiểu sử.'"
+                    >
+                        Yêu mây trời và cây cỏ.
+                    </span>
+                </div>
+
+                <form class="field-edit" th:action="@{/profile/edit/bio}" method="post">
+                    <textarea
+                            name="bio"
+                            class="edit-input"
+                            maxlength="512"
+                            th:text="${user.bio}"
+                    ></textarea>
+
+                    <div class="field-actions">
+                        <button
+                                type="button"
+                                class="btn btn-outline btn-cancel-edit"
+                        >
+                            Hủy
+                        </button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="advanced-settings">
+            <div class="settings-group" id="change-password">
+                <div class="settings-info">
+                    <h3>Đổi mật khẩu</h3>
+                    <p>Cập nhật lại thông tin bảo mật cho tài khoản của bạn.</p>
+                </div>
+
+                <form th:action="@{/auth/reset-password}" method="post">
+                    <input type="hidden" name="email" th:value="${user.email}" />
+
+                    <button type="submit" class="btn btn-outline" onclick="notify('Email xác nhận thay đổi mật khẩu đã được gửi đến email của tài khoản này.')">
+                        <span class="material-symbols-rounded">key</span>
+                        Đổi mật khẩu
+                    </button>
+                </form>
+            </div>
+
+            <div class="settings-group" id="lock-account">
+                <div class="settings-info">
+                    <h3>Khóa tài khoản</h3>
+                    <p>Tài khoản sẽ không thể truy cập cho đến khi được mở lại.</p>
+                </div>
+
+                <form th:action="@{/profile/edit/lock}" method="post">
+                    <button type="submit" class="btn btn-danger-outline" onclick="notify('Email xác nhận khóa tài khoản đã được gửi đến email của tài khoản này.')">
+                        <span class="material-symbols-rounded">lock</span>
+                        Khóa tài khoản
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<th:block layout:fragment="scripts">
+    <script th:src="@{/js/pages/profile/form.js}" defer></script>
+</th:block>
+</body>
+</html>

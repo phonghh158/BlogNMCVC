@@ -5,7 +5,9 @@ import com.J2EE.BlogNMCVC.constant.UserStatus;
 import com.J2EE.BlogNMCVC.dto.auth.request.RegisterRequest;
 import com.J2EE.BlogNMCVC.dto.auth.request.ResetPasswordRequest;
 import com.J2EE.BlogNMCVC.dto.auth.response.AuthResponse;
+import com.J2EE.BlogNMCVC.dto.response.UserResponse;
 import com.J2EE.BlogNMCVC.mapper.AuthMapper;
+import com.J2EE.BlogNMCVC.mapper.UserMapper;
 import com.J2EE.BlogNMCVC.model.Token;
 import com.J2EE.BlogNMCVC.model.User;
 import com.J2EE.BlogNMCVC.repository.UserRepository;
@@ -39,6 +41,8 @@ public class AuthService implements UserDetailsService {
 
     @Autowired
     private MailService mailService;
+    @Autowired
+    private UserMapper userMapper;
 
     public AuthResponse register(RegisterRequest req) {
         if (userRepository.existsByEmail(req.getEmail())) {
@@ -68,7 +72,7 @@ public class AuthService implements UserDetailsService {
         return authMapper.toAuthResponse(user, "Register new account successfully!");
     }
 
-    public AuthResponse verifyUser(String plainToken) {
+    public void verifyUser(String plainToken) {
         Token token = tokenService.getToken(plainToken, TokenType.VERIFY_EMAIL);
 
         User user = token.getUser();
@@ -76,32 +80,36 @@ public class AuthService implements UserDetailsService {
 
         userRepository.save(user);
         tokenService.deleteToken(token);
-
-        return authMapper.toAuthResponse(user, "Email verified successfully!");
     }
 
     // Chưa test
     public void resetPassword(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         String token = tokenService.generateToken(TokenType.RESET_PASSWORD, 15, user);
 
-        String verifyLink = "http://localhost:8080/auth/reset-password?token=" + token;
+        String verifyLink = "http://localhost:8080/auth/change-password?token=" + token;
 
         mailService.sendResetPasswordEmail(user.getEmail(), user.getName(), verifyLink);
     }
 
-    public void updatePassword(ResetPasswordRequest req) {
-        Token token = tokenService.getToken(req.getToken(), TokenType.RESET_PASSWORD);
+    public UserResponse validateResetPasswordToken(String plainToken) {
+        Token token = tokenService.getToken(plainToken, TokenType.RESET_PASSWORD);
 
+        User user = token.getUser();
+        return userMapper.toUserResponse(user);
+    }
+
+    public void updatePassword(ResetPasswordRequest req) {
         if (!req.getNewPassword().equals(req.getConfirmNewPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
 
-        String encodedPassword = passwordEncoder.encode(req.getNewPassword());
+        Token token = tokenService.getToken(req.getToken(), TokenType.RESET_PASSWORD);
 
         User user = token.getUser();
-        user.setPassword(encodedPassword);
+        user.setPassword(passwordEncoder.encode(req.getNewPassword()));
 
         userRepository.save(user);
         tokenService.deleteToken(token);

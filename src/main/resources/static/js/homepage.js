@@ -17,9 +17,7 @@ const homepageMenuLinks = document.querySelectorAll(".homepage-nav .menu a");
 homepageMenuLinks[0].classList.add("active");
 
 homepageMenuLinks.forEach((link) => {
-    link.addEventListener("click", (e) => {
-        e.preventDefault();
-
+    link.addEventListener("click", () => {
         const targetId = link.getAttribute("href");
         const targetSection = document.querySelector(targetId);
 
@@ -174,3 +172,5 @@ document.getElementById("prev-gal").addEventListener("click", () => {
 
 updateSlider();
 startAutoSwap();
+
+

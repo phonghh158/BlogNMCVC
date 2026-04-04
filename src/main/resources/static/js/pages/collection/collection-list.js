@@ -164,10 +164,16 @@ for (let i = 0; i < collectionItems.length; i++) {
     collectionItems[i].addEventListener("click", () => {
         const collectionId = collectionItems[i].dataset.id;
 
-        document.getElementById("edit-collection")
-            .setAttribute("href", `/admin/collections/${collectionId}/edit`);
-        document.getElementById("delete-collection")
-            .setAttribute("href", `/admin/collections/${collectionId}/delete`);
+        const editCollection = document.getElementById("edit-collection");
+        const deleteCollection = document.getElementById("delete-collection");
+
+        if (editCollection) {
+            editCollection.setAttribute("href", `/admin/collections/${collectionId}/edit`);
+        }
+
+        if (deleteCollection) {
+            deleteCollection.setAttribute("href", `/admin/collections/${collectionId}/delete`);
+        }
 
         fetchCollectionContent(collectionId);
     });
