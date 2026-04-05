@@ -265,6 +265,77 @@ main {
     box-shadow: 0 8px 24px rgb(from var(--color-text) r g b / 0.11);
 }
 
+/* --- Topic Style By Status --- */
+.topic-status-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    padding: 6px 12px;
+    gap: 4px;
+    border-radius: 999px;
+    align-items: center;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 12px rgb(from var(--color-text) r g b / 0.11);
+    z-index: 666;
+}
+
+.topic-status-badge .material-symbols-rounded {
+    font-size: 16px;
+    --icon-opsz: 16;
+}
+
+.topic-status-badge .text {
+    font-family: var(--font-text);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* DRAFT (Bản nháp) - Viền đứt, nhãn màu phụ */
+.topic-card.draft {
+    border-style: dashed;
+    border-color: var(--color-text-secondary);
+}
+
+.topic-card.draft .topic-status-badge {
+    background-color: rgb(from var(--color-surface) r g b / 0.66);
+    color: var(--color-text-secondary);
+    border: 1px dashed var(--color-text-secondary);
+}
+
+/* HIDDEN (Đã ẩn) - Ảnh bị làm mờ, nhãn màu tối */
+.topic-card.hidden {
+    opacity: 0.66;
+}
+
+.topic-card.hidden .topic-image img {
+    filter: blur(2px) brightness(0.33);
+}
+
+.topic-card.hidden .topic-status-badge {
+    background-color: rgb(from var(--color-text) r g b / 0.66);
+    color: var(--color-background);
+}
+
+/* 3. DELETED (Đã xóa) - Grayscale 100%, nhãn đỏ Error */
+.topic-card.deleted {
+    filter: grayscale(100%);
+    opacity: 0.66;
+    background-color: rgb(from var(--color-secondary) r g b / 0.33);
+}
+
+.topic-card.deleted:hover {
+    opacity: 0.99;
+    border-color: var(--color-error);
+}
+
+.topic-card.deleted .topic-status-badge {
+    background-color: var(--color-error);
+    color: var(--color-text-inverse);
+}
+
+
+/* ----- Topic Detail Summary ------*/
 .topic-image {
     width: 100%;
     aspect-ratio: 16 / 9;

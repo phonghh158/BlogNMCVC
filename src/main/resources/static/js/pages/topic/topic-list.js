@@ -47,8 +47,8 @@ function bindFilterEvents(filterBox) {
 bindFilterEvents(collectionFilterBox);
 bindFilterEvents(statusFilterBox);
 
-const pageInput = document.getElementById("current-page-input");
 
+const pageInput = document.getElementById("current-page-input");
 if (pageInput) {
     pageInput.addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
@@ -60,16 +60,13 @@ if (pageInput) {
 
             const maxPage = parseInt(this.max);
 
-            // clamp value
             if (page < 1) page = 1;
             if (page > maxPage) page = maxPage;
 
             const params = new URLSearchParams(window.location.search);
-
-            // Spring dùng 0-based
             params.set("page", page - 1);
 
-            window.location.href = "/topics?" + params.toString();
+            window.location.href = window.location.pathname + "?" + params.toString();
         }
     });
 }

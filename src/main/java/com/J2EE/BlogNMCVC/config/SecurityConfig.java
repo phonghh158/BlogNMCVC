@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 "/comments/**",
                                 "/reactions/**",
                                 "/bookmarks/**",
+                                "/search/**",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**"
@@ -60,7 +61,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/authentication?logout")
+                        .logoutSuccessUrl("/")
                         .permitAll()
                 );
 

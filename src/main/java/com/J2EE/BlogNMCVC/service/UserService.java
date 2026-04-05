@@ -11,6 +11,10 @@ import com.J2EE.BlogNMCVC.model.User;
 import com.J2EE.BlogNMCVC.repository.UserRepository;
 import com.J2EE.BlogNMCVC.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -87,6 +91,38 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
         return userMapper.toUserResponse(user);
+    }
+
+    public Page<UserResponse> searchPublicUsers(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("updatedAt").descending()
+        );
+
+        return userRepository.findAllByDeletedAtIsNullAndUsernameContainingIgnoreCaseOrDeletedAtIsNullAndNameContainingIgnoreCase(keyword, keyword, pageable)
+                .map(userMapper::toUserResponse);
+    }
+
+    public Page<UserResponse> searchAllUsers(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("updatedAt").descending()
+        );
+
+        return userRepository.findAllByUsernameContainingIgnoreCaseOrNameContainingIgnoreCase(keyword, keyword, pageable)
+                .map(userMapper::toUserResponse);
+    }
+
+    public Page<UserResponse> getAllUsersByStatus(UserStatus status, int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("updatedAt").descending()
+        );
+
+        return userRepository.findAllByStatus(status, pageable).map(userMapper::toUserResponse);
     }
 
     public void updateName(String name) {

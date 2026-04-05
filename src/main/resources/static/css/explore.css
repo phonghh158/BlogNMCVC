@@ -1,0 +1,156 @@
+/* --- Lớp phủ Tìm kiếm (Explore Overlay) --- */
+.explore-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+
+    /* Background Gradient Cầu vồng*/
+    background: linear-gradient(
+            60deg,
+            rgb(from var(--rainbow-red) r g b / 0.55),
+            rgb(from var(--rainbow-orange) r g b / 0.55),
+            rgb(from var(--rainbow-yellow) r g b / 0.55),
+            rgb(from var(--rainbow-green) r g b / 0.55),
+            rgb(from var(--rainbow-blue) r g b / 0.55),
+            rgb(from var(--rainbow-indigo) r g b / 0.55),
+            rgb(from var(--rainbow-violet) r g b / 0.55)
+    );
+    backdrop-filter: blur(4px);
+    transition: all 0.5s cubic-bezier(0.5, 0, 0.25, 1);
+    opacity: 0;
+    z-index: -9999;
+}
+
+/* Class hiển thị Overlay */
+.explore-overlay.show {
+    opacity: 1;
+    z-index: 9999;
+}
+
+/* Nút X to ở góc */
+.explore-close-btn {
+    position: absolute;
+    top: 48px;
+    right: 48px;
+    background: transparent;
+    border: none;
+    color: var(--color-background);
+    cursor: pointer;
+    transition: transform 0.33s ease;
+}
+
+.explore-close-btn .material-symbols-rounded {
+    font-size: 48px;
+    --icon-wght: 400;
+    --icon-opsz: 48;
+}
+
+.explore-close-btn:hover {
+    transform: scale(1.1) rotate(90deg);
+}
+
+/* Nội dung căn giữa */
+.explore-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 840px;
+    margin-bottom: 144px;
+    padding: 0 24px;
+    gap: 36px;
+    align-items: center;
+    transform: translateY(24px);
+    transition: transform 0.33s ease;
+}
+
+.explore-overlay.show .explore-content {
+    transform: translateY(0);
+}
+
+.explore-content h2 {
+    font-family: var(--font-title);
+    font-size: 48px;
+    font-weight: 700;
+    color: #121212;
+    text-shadow: 0 4px 8px rgba(255, 255, 255, 0.33);
+    text-align: center;
+}
+
+/* Thiết kế thanh Search Box */
+.explore-form {
+    width: 100%;
+}
+
+.search-bar-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-surface);
+    border-radius: 999px;
+    padding: 8px 8px 8px 32px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.33);
+    transition: all 0.33s ease;
+}
+
+.search-bar-wrapper:focus-within {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.33);
+}
+
+.explore-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: var(--font-text);
+    font-size: 20px;
+    color: var(--color-text);
+    outline: none;
+}
+
+.explore-select {
+    border: none;
+    background: transparent;
+    font-family: var(--font-text);
+    font-size: 16px;
+    color: var(--color-text-secondary);
+    padding: 8px 16px;
+    margin: 0 16px;
+    border-left: 2px solid var(--color-secondary);
+    cursor: pointer;
+    outline: none;
+}
+
+.explore-select option {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+.explore-submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    border: none;
+    color: #eee;
+    cursor: pointer;
+    transition: all 0.33s ease;
+}
+
+.explore-submit-btn:hover {
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 2px dashed var(--color-primary);
+    transform: scale(1.1);
+}
+
+.explore-submit-btn .material-symbols-rounded {
+    font-size: 28px;
+    --icon-opsz: 28;
+}

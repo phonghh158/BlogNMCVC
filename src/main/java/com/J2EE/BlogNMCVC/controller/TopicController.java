@@ -79,6 +79,7 @@ public class TopicController {
         model.addAttribute("selectedStatus", isAdmin ? status : null);
         model.addAttribute("currentPage", page);
         model.addAttribute("size", size);
+        model.addAttribute("baseUrl", "/topics");
 
         return "topic/list";
     }

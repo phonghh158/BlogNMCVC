@@ -28,6 +28,17 @@ public interface TopicRepository extends JpaRepository<Topic, UUID> {
 
     Page<Topic> findAllByCollectionInAndStatusAndDeletedAtIsNull(List<Collection> collections, TopicStatus status, Pageable pageable);
 
+    Page<Topic> findAllByTitleContainingIgnoreCaseAndStatusAndDeletedAtIsNull(
+            String title,
+            TopicStatus status,
+            Pageable pageable
+    );
+
+    Page<Topic> findAllByTitleContainingIgnoreCase(
+            String title,
+            Pageable pageable
+    );
+
     // ADMIN
     Page<Topic> findAllByCollection(Collection collection, Pageable pageable);
 

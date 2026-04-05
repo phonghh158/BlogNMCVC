@@ -119,8 +119,9 @@
 
                     <form
                             method="post"
-                            action="#"
+                            action="/collections"
                             id="delete-collection-form"
+                            onsubmit="confirmDelete('Bạn có chắc chắn muốn xóa tuyển tập này?')"
                     >
                         <input
                                 type="hidden"
@@ -131,7 +132,6 @@
                                 type="submit"
                                 class="collection-action-button"
                                 id="delete-collection"
-                                onsubmit="confirmDelete('Bạn có chắc chắn muốn xoa tuyển tập này?')"
                         >
                             <span class="material-symbols-rounded">delete_forever</span>
                         </button>

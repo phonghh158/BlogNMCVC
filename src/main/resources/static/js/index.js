@@ -95,6 +95,5 @@ function updateDimensions() {
     screenDisplay.textContent = `${width}px x ${height}px`;
 }
 
-updateDimensions();
-
-window.addEventListener("resize", updateDimensions);
+// updateDimensions();
+// window.addEventListener("resize", updateDimensions);

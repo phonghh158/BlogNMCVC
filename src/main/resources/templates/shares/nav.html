@@ -22,7 +22,11 @@
             <span class="material-symbols-rounded">news</span>
             <span class="text">Topics</span>
         </a>
-        <a href="#" class="menu-link">
+        <a th:href="@{/users}" class="menu-link" th:if="${isAdmin}">
+            <span class="material-symbols-rounded"> diversity_1 </span>
+            <span class="text">Users</span>
+        </a>
+        <a href="#" class="menu-link" id="nav-explore-btn">
             <span class="material-symbols-rounded">search</span>
             <span class="text">Explore</span>
         </a>

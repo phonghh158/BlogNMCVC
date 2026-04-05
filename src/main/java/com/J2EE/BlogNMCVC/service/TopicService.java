@@ -166,6 +166,28 @@ public class TopicService {
         return topicRepository.findAllByStatusAndDeletedAtIsNull(TopicStatus.PUBLISHED, pageable).map(topicMapper::toResponse);
     }
 
+    public Page<TopicResponse> searchPublicTopics(String title, int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("publishedAt").descending()
+        );
+
+        return topicRepository.findAllByTitleContainingIgnoreCaseAndStatusAndDeletedAtIsNull(title, TopicStatus.PUBLISHED, pageable)
+                .map(topicMapper::toResponse);
+    }
+
+    public Page<TopicResponse> searchAllTopics(String title, int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("publishedAt").descending()
+        );
+
+        return topicRepository.findAllByTitleContainingIgnoreCase(title, pageable)
+                .map(topicMapper::toResponse);
+    }
+
     // Read One
     // Read By Slug
     public TopicResponse getTopicBySlug(String slug) {

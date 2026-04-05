@@ -165,14 +165,14 @@ for (let i = 0; i < collectionItems.length; i++) {
         const collectionId = collectionItems[i].dataset.id;
 
         const editCollection = document.getElementById("edit-collection");
-        const deleteCollection = document.getElementById("delete-collection");
+        const deleteCollection = document.getElementById("delete-collection-form");
 
         if (editCollection) {
             editCollection.setAttribute("href", `/admin/collections/${collectionId}/edit`);
         }
 
         if (deleteCollection) {
-            deleteCollection.setAttribute("href", `/admin/collections/${collectionId}/delete`);
+            deleteCollection.setAttribute("action", `/admin/collections/${collectionId}/delete`);
         }
 
         fetchCollectionContent(collectionId);

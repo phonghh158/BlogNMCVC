@@ -1,5 +1,6 @@
 package com.J2EE.BlogNMCVC.controller;
 
+import com.J2EE.BlogNMCVC.constant.UserStatus;
 import com.J2EE.BlogNMCVC.dto.request.ChangeUsernameRequest;
 import com.J2EE.BlogNMCVC.dto.response.BookmarkResponse;
 import com.J2EE.BlogNMCVC.dto.response.TopicResponse;
@@ -18,10 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -103,6 +101,23 @@ public class UserController {
         model.addAttribute("isOwner", false);
 
         return "profile/index";
+    }
+
+    @GetMapping("/users")
+    public String getUsersByStatus(
+            @RequestParam(defaultValue = "ACTIVE") UserStatus status,
+            @RequestParam(defaultValue = "0") int page,
+            Model model
+    ) {
+        Page<UserResponse> userPage = userService.getAllUsersByStatus(status, page, 9);
+
+        model.addAttribute("pageTitle", "Khách thăm nhà");
+        model.addAttribute("userPage", userPage);
+        model.addAttribute("selectedStatus", status);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("baseUrl", "/users");
+
+        return "profile/list";
     }
 
     @GetMapping("/profile/edit")

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html
+        lang="vi"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+>
+<head>
+    <th:block layout:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/pages/profile/user-list.css}" />
+    </th:block>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="users-page-wrapper">
+        <div class="user-filter-bar" id="user-filter-bar" th:if="${isAdmin}">
+            <a
+                    class="filter-btn"
+                    th:classappend="${selectedStatus.name() == 'ACTIVE'} ? ' active' : ''"
+                    th:href="@{/users(status='ACTIVE', page=0)}"
+            >
+                Đang hoạt động
+            </a>
+
+            <a
+                    class="filter-btn"
+                    th:classappend="${selectedStatus.name() == 'INACTIVE'} ? ' active' : ''"
+                    th:href="@{/users(status='INACTIVE', page=0)}"
+            >
+                Không hoạt động
+            </a>
+
+            <a
+                    class="filter-btn"
+                    th:classappend="${selectedStatus.name() == 'BANNED'} ? ' active' : ''"
+                    th:href="@{/users(status='BANNED', page=0)}"
+            >
+                Bị cấm
+            </a>
+        </div>
+
+        <div class="user-list" id="user-list">
+            <a
+                    th:each="user : ${userPage.content}"
+                    th:href="@{/profile/{username}(username=${user.username})}"
+                    class="user-card"
+                    th:classappend="${user.status.name().toLowerCase()}"
+                    th:attr="
+                        data-status=${user.status.name().toLowerCase()},
+                        title=${
+                            user.status.name() == 'INACTIVE' ? 'Tài khoản này đã bị khóa' :
+                            (user.status.name() == 'BANNED' ? 'Tài khoản này đã bị cấm' : null)
+                        }"
+            >
+                <div class="user-avatar-box">
+                    <img
+                            th:src="${user.avatar != null and !#strings.isEmpty(user.avatar)} ? ${user.avatar} : '/images/default-avatar.jpg'"
+                            th:alt="${user.name}"
+                    />
+                </div>
+
+                <div class="user-card-info">
+                    <span class="user-card-name" th:text="${user.name}">Tên người dùng</span>
+                    <span class="user-card-username" th:text="${'@' + user.username}">@username</span>
+                </div>
+            </a>
+        </div>
+
+        <div class="empty-state" th:if="${userPage.totalElements == 0}">
+            <p>Không có người dùng nào phù hợp.</p>
+        </div>
+
+        <div class="pagination" th:if="${userPage.totalPages > 1}">
+            <a
+                    class="page-btn prev"
+                    th:if="${userPage.hasPrevious()}"
+                    th:href="@{${baseUrl}(page=${currentPage - 1}, size=${size}, status=${selectedStatus}, keyword=${keyword})}"
+            >
+                <span class="material-symbols-rounded">chevron_left</span>
+            </a>
+
+            <span class="page-btn prev disabled" th:unless="${userPage.hasPrevious()}">
+                <span class="material-symbols-rounded">chevron_left</span>
+            </span>
+
+            <div class="page-input-container">
+                <input
+                        type="number"
+                        class="current-page-input"
+                        id="current-page-input"
+                        th:value="${currentPage + 1}"
+                        min="1"
+                        th:max="${userPage.totalPages}"
+                />
+                <span class="page-separator">/</span>
+                <span class="total-pages" id="total-pages" th:text="${userPage.totalPages}">1</span>
+            </div>
+
+            <a
+                    class="page-btn next"
+                    th:if="${userPage.hasNext()}"
+                    th:href="@{${baseUrl}(page=${currentPage + 1}, size=${size}, status=${selectedStatus}, keyword=${keyword})}"
+            >
+                <span class="material-symbols-rounded">chevron_right</span>
+            </a>
+
+            <span class="page-btn next disabled" th:unless="${userPage.hasNext()}">
+                <span class="material-symbols-rounded">chevron_right</span>
+            </span>
+        </div>
+    </div>
+</main>
+
+<th:block layout:fragment="scripts">
+    <script th:src="@{/js/pages/profile/user-list.js}" defer></script>
+</th:block>
+</body>
+</html>

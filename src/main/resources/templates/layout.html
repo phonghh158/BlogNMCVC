@@ -10,6 +10,7 @@
 
     <link rel="icon" type="image/x-icon" th:href="@{/images/favicon/favicon.ico}" />
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" th:href="@{/css/explore.css}" />
 
     <th:block layout:fragment="styles"></th:block>
 
@@ -29,10 +30,45 @@
     <div th:replace="~{shares/footer :: footer}"></div>
 </div>
 
-<!-- Nhớ xóa khi deploy -->
-<span class="device-screen-dimension" id="device-screen-dimension">Loading...</span>
+<div class="explore-overlay" id="explore-overlay">
+    <button class="explore-close-btn" id="explore-close-btn" title="Đóng tìm kiếm">
+        <span class="material-symbols-rounded">close</span>
+    </button>
+
+    <div class="explore-content">
+        <h2>Khám phá nội dung bạn muốn:</h2>
+
+        <form
+                class="explore-form"
+                id="explore-form"
+                action="/search/topic"
+                method="GET"
+        >
+            <div class="search-bar-wrapper">
+                <input
+                        type="text"
+                        name="keyword"
+                        class="explore-input"
+                        placeholder="Nhập từ khóa tìm kiếm..."
+                        autocomplete="off"
+                        required
+                />
+
+                <select name="type" class="explore-select" id="explore-select">
+                    <option value="title" selected>Tiêu đề</option>
+                    <option value="user">Người dùng</option>
+                </select>
+
+                <button type="submit" class="explore-submit-btn">
+                    <span class="material-symbols-rounded">search</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script th:src="@{/js/index.js}" defer></script>
+<script th:src="@{/js/explore.js}" defer></script>
 <th:block layout:fragment="scripts"></th:block>
 </body>
 </html>

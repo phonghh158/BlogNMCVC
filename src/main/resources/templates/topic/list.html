@@ -23,11 +23,11 @@
         </div>
         <span class="header-title" id="header-title">Topics</span>
         <span class="header-subtitle" id="header-subtitle">
-            Những bài viết nhỏ được gom lại ở đây.
+            Những bài viết nhỏ được đặt tại đây.
         </span>
     </div>
 
-    <div class="create-topic">
+    <div class="create-topic" th:if="${isAdmin}">
         <span class="create-topic-title">Create a new Topic: </span>
         <a th:href="@{/admin/topics/create}" class="create-topic-button">
             <span class="material-symbols-rounded">add</span>
@@ -105,10 +105,32 @@
 
         <div class="topic-list">
             <a
-                    class="topic-card"
                     th:each="topic : ${topicPage.content}"
+                    class="topic-card"
+                    th:classappend="${topic.status.name().toLowerCase()}"
                     th:href="@{/topics/{slug}(slug=${topic.slug})}"
             >
+                <div
+                        class="topic-status-badge"
+                        th:if="${topic.status.name() != 'PUBLISHED'}"
+                >
+                    <span class="material-symbols-rounded"
+                          th:text="${
+                                topic.status.name() == 'DRAFT' ? 'edit_document' :
+                                (topic.status.name() == 'HIDDEN' ? 'visibility_off' :
+                                (topic.status.name() == 'DELETED' ? 'delete' : ''))
+                          }">
+                    </span>
+
+                                    <span class="text"
+                                          th:text="${
+                                topic.status.name() == 'DRAFT' ? 'Bản nháp' :
+                                (topic.status.name() == 'HIDDEN' ? 'Đã ẩn' :
+                                (topic.status.name() == 'DELETED' ? 'Đã xóa' : ''))
+                          }">
+                    </span>
+                </div>
+
                 <div
                         class="topic-image"
                         th:if="${topic.thumbnail != null and !#strings.isEmpty(topic.thumbnail)}"
@@ -143,14 +165,14 @@
             <a
                     class="page-btn prev"
                     th:if="${topicPage.hasPrevious()}"
-                    th:href="@{/topics(page=${currentPage - 1}, size=${size}, collectionIds=${selectedCollectionIds}, status=${selectedStatus})}"
+                    th:href="@{${baseUrl}(page=${currentPage - 1}, size=${size}, collectionIds=${selectedCollectionIds}, status=${selectedStatus}, keyword=${keyword})}"
             >
                 <span class="material-symbols-rounded">chevron_left</span>
             </a>
 
             <span class="page-btn prev disabled" th:unless="${topicPage.hasPrevious()}">
-            <span class="material-symbols-rounded">chevron_left</span>
-        </span>
+                <span class="material-symbols-rounded">chevron_left</span>
+            </span>
 
             <div class="page-input-container">
                 <input
@@ -168,7 +190,7 @@
             <a
                     class="page-btn next"
                     th:if="${topicPage.hasNext()}"
-                    th:href="@{/topics(page=${currentPage + 1}, size=${size}, collectionIds=${selectedCollectionIds}, status=${selectedStatus})}"
+                    th:href="@{${baseUrl}(page=${currentPage + 1}, size=${size}, collectionIds=${selectedCollectionIds}, status=${selectedStatus}, keyword=${keyword})}"
             >
                 <span class="material-symbols-rounded">chevron_right</span>
             </a>

@@ -225,7 +225,7 @@
 
 .like-button.active {
     background-color: var(--rainbow-red);
-    color: var(--color-text);
+    color: var(--color-text-inverse);
     --icon-fill: 1;
 }
 
@@ -239,6 +239,9 @@
 }
 .pin-button.active {
     background-color: var(--rainbow-yellow);
-    color: var(--color-text-inverse);
+    color: #121212;
     --icon-fill: 1;
+}
+.pin-button.active .material-symbols-rounded {
+    color: #121212;
 }
