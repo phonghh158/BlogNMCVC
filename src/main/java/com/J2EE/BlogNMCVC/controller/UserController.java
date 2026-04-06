@@ -174,9 +174,11 @@ public class UserController {
     ) {
         try {
             userService.updateName(name);
-            redirectAttributes.addFlashAttribute("successMessage", "Update name successfully!");
+            redirectAttributes.addFlashAttribute("message", "Tên hiển thị đã được thay đổi.");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
         }
 
         return "redirect:/profile/edit";
@@ -188,20 +190,24 @@ public class UserController {
             RedirectAttributes redirectAttributes
     ) {
         if (avatar == null || avatar.isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Avatar must not be empty!");
+            redirectAttributes.addFlashAttribute("message", "Ảnh không được để trống");
+            redirectAttributes.addFlashAttribute("messageType", "error");
             return "redirect:/profile/edit";
         }
 
         if (avatar.getContentType() == null || !avatar.getContentType().startsWith("image/")) {
-            redirectAttributes.addFlashAttribute("errorMessage", "File must be an image!");
+            redirectAttributes.addFlashAttribute("message", "File phải là ảnh");
+            redirectAttributes.addFlashAttribute("messageType", "error");
             return "redirect:/profile/edit";
         }
 
         try {
             userService.updateAvatar(avatar);
-            redirectAttributes.addFlashAttribute("successMessage", "Update avatar successfully!");
+            redirectAttributes.addFlashAttribute("message", "Cập nhật ảnh đại diện thành công");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
         }
 
         return "redirect:/profile/edit";
@@ -216,9 +222,11 @@ public class UserController {
     ) {
         try {
             userService.updateBio(bio);
-            redirectAttributes.addFlashAttribute("successMessage", "Update bio successfully!");
+            redirectAttributes.addFlashAttribute("message", "Cập nhật mô tả thành công");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
         }
 
         return "redirect:/profile/edit";
@@ -232,19 +240,22 @@ public class UserController {
     ) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute(
-                    "errorMessage",
+                    "message",
                     bindingResult.getFieldError() != null
                             ? bindingResult.getFieldError().getDefaultMessage()
-                            : "Invalid data!"
+                            : "Dữ liệu không hợp lệ"
             );
+            redirectAttributes.addFlashAttribute("messageType", "error");
             return "redirect:/profile/edit";
         }
 
         try {
             userService.changeUsername(req);
-            redirectAttributes.addFlashAttribute("successMessage", "Change username successfully!");
+            redirectAttributes.addFlashAttribute("message", "Đổi tên người dùng thành công");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
         }
 
         return "redirect:/profile/edit";
@@ -255,11 +266,13 @@ public class UserController {
         try {
             userService.lockAccount();
             redirectAttributes.addFlashAttribute(
-                    "successMessage",
-                    "Confirmation email has been sent. Please check your email to lock your account."
+                    "message",
+                    "Đã gửi email xác nhận khóa tài khoản"
             );
+            redirectAttributes.addFlashAttribute("messageType", "success");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
         }
 
         return "redirect:/profile/edit";
@@ -274,7 +287,8 @@ public class UserController {
             userService.confirmLockAccount(token);
             return "redirect:/logout";
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
             return "redirect:/profile/edit";
         }
     }

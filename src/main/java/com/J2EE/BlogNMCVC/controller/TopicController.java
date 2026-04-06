@@ -145,14 +145,32 @@ public class TopicController {
             model.addAttribute("collections", collectionService.getListCollectionsByDeletedAtIsNull());
             model.addAttribute("statuses", TopicStatus.values());
             model.addAttribute("isEdit", false);
+            model.addAttribute(
+                    "message",
+                    bindingResult.getFieldError() != null
+                            ? bindingResult.getFieldError().getDefaultMessage()
+                            : "Dữ liệu không hợp lệ"
+            );
+            model.addAttribute("messageType", "error");
 
             return "topic/form";
         }
 
-        TopicResponse topic = topicService.createTopic(topicRequest, thumbnail);
-        redirectAttributes.addFlashAttribute("successMessage", "Topic created successfully");
+        try {
+            TopicResponse topic = topicService.createTopic(topicRequest, thumbnail);
+            redirectAttributes.addFlashAttribute("message", "Tạo bài viết thành công.");
+            redirectAttributes.addFlashAttribute("messageType", "success");
 
-        return "redirect:/topics/" + topic.getSlug();
+            return "redirect:/topics/" + topic.getSlug();
+        } catch (Exception e) {
+            model.addAttribute("collections", collectionService.getListCollectionsByDeletedAtIsNull());
+            model.addAttribute("statuses", TopicStatus.values());
+            model.addAttribute("isEdit", false);
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("messageType", "error");
+
+            return "topic/form";
+        }
     }
 
     @GetMapping("/admin/topics/{id}/edit")
@@ -202,14 +220,37 @@ public class TopicController {
             model.addAttribute("collections", collectionService.getListCollectionsByDeletedAtIsNull());
             model.addAttribute("statuses", TopicStatus.values());
             model.addAttribute("isEdit", true);
+            model.addAttribute(
+                    "message",
+                    bindingResult.getFieldError() != null
+                            ? bindingResult.getFieldError().getDefaultMessage()
+                            : "Dữ liệu không hợp lệ"
+            );
+            model.addAttribute("messageType", "error");
 
             return "topic/form";
         }
 
-        TopicResponse topic = topicService.updateTopic(id, topicRequest, thumbnail);
-        redirectAttributes.addFlashAttribute("successMessage", "Topic updated successfully");
+        try {
+            TopicResponse topic = topicService.updateTopic(id, topicRequest, thumbnail);
+            redirectAttributes.addFlashAttribute("message", "Cập nhật bài viết thành công");
+            redirectAttributes.addFlashAttribute("messageType", "success");
 
-        return "redirect:/topics/" + topic.getSlug();
+            return "redirect:/topics/" + topic.getSlug();
+        } catch (Exception e) {
+            TopicResponse topic = topicService.getTopicById(id);
+
+            model.addAttribute("topicId", id);
+            model.addAttribute("topic", topic);
+            model.addAttribute("topicRequest", topicRequest);
+            model.addAttribute("collections", collectionService.getListCollectionsByDeletedAtIsNull());
+            model.addAttribute("statuses", TopicStatus.values());
+            model.addAttribute("isEdit", true);
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("messageType", "error");
+
+            return "topic/form";
+        }
     }
 
     @PostMapping("/admin/topics/{id}/delete")
@@ -217,8 +258,14 @@ public class TopicController {
             @PathVariable UUID id,
             RedirectAttributes redirectAttributes
     ) {
-        topicService.deleteTopic(id);
-        redirectAttributes.addFlashAttribute("successMessage", "Topic deleted successfully");
+        try {
+            topicService.deleteTopic(id);
+            redirectAttributes.addFlashAttribute("message", "Xóa bài viết thành công");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
+        }
 
         return "redirect:/topics";
     }

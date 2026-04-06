@@ -10,7 +10,7 @@
 
     <link rel="icon" type="image/x-icon" th:href="@{/images/favicon/favicon.ico}" />
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
-    <link rel="stylesheet" th:href="@{/css/explore.css}" />
+    <link rel="stylesheet" th:href="@{/css/push-notification.css}" />
 
     <th:block layout:fragment="styles"></th:block>
 
@@ -65,10 +65,20 @@
             </div>
         </form>
     </div>
+
+    <div class="push-notification-container" id="push-notification-container"></div>
+
+    <div
+            id="server-push-notification"
+            th:if="${message != null}"
+            th:attr="data-type=${messageType}, data-message=${message}"
+            hidden
+    ></div>
 </div>
 
 <script th:src="@{/js/index.js}" defer></script>
 <script th:src="@{/js/explore.js}" defer></script>
+<script th:src="@{/js/push-notification.js}" defer></script>
 <th:block layout:fragment="scripts"></th:block>
 </body>
 </html>

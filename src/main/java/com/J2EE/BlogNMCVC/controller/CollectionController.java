@@ -119,14 +119,22 @@ public class CollectionController {
             model.addAttribute("formAction", "/admin/collections/create");
             model.addAttribute("formTitle", "Create Collection");
             model.addAttribute("isEdit", false);
+            model.addAttribute(
+                    "message",
+                    bindingResult.getFieldError() != null
+                            ? bindingResult.getFieldError().getDefaultMessage()
+                            : "Dữ liệu không hợp lệ"
+            );
+            model.addAttribute("messageType", "error");
 
             return "collection/form";
         }
 
         collectionService.createCollection(request);
-        redirectAttributes.addFlashAttribute("successMessage", "Collection created successfully!");
+        redirectAttributes.addFlashAttribute("message", "Tạo tuyển tập thành công");
+        redirectAttributes.addFlashAttribute("messageType", "success");
 
-        return "redirect:/admin/collections";
+        return "redirect:/collections";
     }
 
     // ADMIN: show edit form
@@ -166,14 +174,22 @@ public class CollectionController {
             model.addAttribute("formAction", "/admin/collections/" + id + "/edit");
             model.addAttribute("formTitle", "Edit Collection");
             model.addAttribute("isEdit", true);
+            model.addAttribute(
+                    "message",
+                    bindingResult.getFieldError() != null
+                            ? bindingResult.getFieldError().getDefaultMessage()
+                            : "Dữ liệu không hợp lệ"
+            );
+            model.addAttribute("messageType", "error");
 
             return "collection/form";
         }
 
         collectionService.updateCollection(id, request);
-        redirectAttributes.addFlashAttribute("successMessage", "Collection updated successfully!");
+        redirectAttributes.addFlashAttribute("message", "Cập nhật tuyển tập thành công");
+        redirectAttributes.addFlashAttribute("messageType", "success");
 
-        return "redirect:/admin/collections";
+        return "redirect:/collections";
     }
 
     // ADMIN: soft delete collection
@@ -182,10 +198,16 @@ public class CollectionController {
             @PathVariable UUID id,
             RedirectAttributes redirectAttributes
     ) {
-        String message = collectionService.deleteCollection(id);
-        redirectAttributes.addFlashAttribute("successMessage", message);
+        try {
+            String message = collectionService.deleteCollection(id);
+            redirectAttributes.addFlashAttribute("message", message);
+            redirectAttributes.addFlashAttribute("messageType", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
+        }
 
-        return "redirect:/admin/collections";
+        return "redirect:/collections";
     }
 
     // ADMIN: restore collection
@@ -194,9 +216,15 @@ public class CollectionController {
             @PathVariable UUID id,
             RedirectAttributes redirectAttributes
     ) {
-        String message = collectionService.restoreCollection(id);
-        redirectAttributes.addFlashAttribute("successMessage", message);
+        try {
+            String message = collectionService.restoreCollection(id);
+            redirectAttributes.addFlashAttribute("message", message);
+            redirectAttributes.addFlashAttribute("messageType", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
+        }
 
-        return "redirect:/admin/collections";
+        return "redirect:/collections";
     }
 }

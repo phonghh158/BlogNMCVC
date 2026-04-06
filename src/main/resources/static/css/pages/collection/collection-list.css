@@ -405,3 +405,13 @@
     color: var(--color-text);
     cursor: default;
 }
+
+
+@media (min-width: 768px) and (max-width: 1399.98px) {
+    .collection-topics {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        width: 100%;
+    }
+}

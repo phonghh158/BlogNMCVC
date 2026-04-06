@@ -9,8 +9,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,15 +43,19 @@ public class AuthController {
             Model model
     ) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("message", "Dữ liệu không hợp lệ.");
+            model.addAttribute("messageType", "error");
             return "auth/authentication";
         }
 
         try {
             AuthResponse response = authService.register(req);
-            model.addAttribute("registerSuccess", response.getMessage());
+            model.addAttribute("message", response.getMessage());
+            model.addAttribute("messageType", "success");
             model.addAttribute("registerRequest", new RegisterRequest());
         } catch (IllegalArgumentException e) {
-            model.addAttribute("registerError", e.getMessage());
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("messageType", "error");
             model.addAttribute("registerRequest", req);
         }
 
@@ -67,9 +69,11 @@ public class AuthController {
     ) {
         try {
             authService.verifyUser(token);
-            redirectAttributes.addFlashAttribute("successMessage", "Email verified successfully!");
+            redirectAttributes.addFlashAttribute("message", "Xác thực email thành công!");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
         }
 
         return "redirect:/authentication";
@@ -85,10 +89,12 @@ public class AuthController {
     ) {
         try {
             authService.resetPassword(email);
-            redirectAttributes.addFlashAttribute("successMessage", "Password reset link has been sent.");
+            redirectAttributes.addFlashAttribute("message", "Link xác nhận đổi mật khẩu đã được gửi đến email của bạn.");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage",
+            redirectAttributes.addFlashAttribute("message",
                     "Nhà không tìm thấy Email của bạn, bạn vào nhà rồi đăng ký mới nhé.");
+            redirectAttributes.addFlashAttribute("messageType", "error");
             return "redirect:/404";
         }
 
@@ -112,7 +118,8 @@ public class AuthController {
 
             return "auth/change-password";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
             return "redirect:/authentication";
         }
     }
@@ -124,15 +131,19 @@ public class AuthController {
             RedirectAttributes redirectAttributes
     ) {
         if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("message", "Dữ liệu không hợp lệ.");
+            redirectAttributes.addFlashAttribute("messageType", "error");
             return "auth/change-password";
         }
 
         try {
             authService.updatePassword(req);
-            redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully!");
+            redirectAttributes.addFlashAttribute("message", "Đổi mật khẩu thành công!");
+            redirectAttributes.addFlashAttribute("messageType", "success");
             return "redirect:/";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
             return "redirect:/authentication";
         }
     }

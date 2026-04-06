@@ -181,5 +181,17 @@ for (let i = 0; i < collectionItems.length; i++) {
 
 if (collectionItems.length > 0) {
     const firstCollectionId = collectionItems[0].dataset.id;
+
+    const editCollection = document.getElementById("edit-collection");
+    const deleteCollection = document.getElementById("delete-collection-form");
+
+    if (editCollection) {
+        editCollection.setAttribute("href", `/admin/collections/${firstCollectionId}/edit`);
+    }
+
+    if (deleteCollection) {
+        deleteCollection.setAttribute("action", `/admin/collections/${firstCollectionId}/delete`);
+    }
+
     fetchCollectionContent(firstCollectionId);
 }

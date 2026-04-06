@@ -1,0 +1,153 @@
+/* css/push-notification.css */
+
+.push-notification-container {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+.push-notification-toast {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    width: max-content;
+    max-width: 400px;
+    min-width: 320px;
+    padding: 16px 20px;
+    background-color: var(--color-surface);
+    box-shadow: 0 8px 16px rgb(from var(--color-text) r g b / 0.33);
+    pointer-events: auto;
+    overflow: hidden;
+    animation: slideInRight 0.33s cubic-bezier(0.5, 0, 0.25, 1) forwards;
+}
+
+.push-notification-toast.hide {
+    animation: slideOutRight 0.33s cubic-bezier(0.5, 0, 0.25, 1) forwards;
+}
+
+/* Màu sắc theo trạng thái */
+.push-notification-toast.success {
+    border-left-color: var(--color-success);
+}
+.push-notification-toast.error {
+    border-left-color: var(--color-error);
+}
+.push-notification-toast.warning {
+    border-left-color: var(--color-warning);
+}
+.push-notification-toast.info {
+    border-left-color: var(--color-primary);
+}
+
+/* Icon trạng thái */
+.push-notification-icon {
+    font-size: 28px;
+    --icon-fill: 1;
+}
+.push-notification-toast.success .push-notification-icon {
+    color: var(--color-success);
+}
+.push-notification-toast.error .push-notification-icon {
+    color: var(--color-error);
+}
+.push-notification-toast.warning .push-notification-icon {
+    color: var(--color-warning);
+}
+.push-notification-toast.info .push-notification-icon {
+    color: var(--color-primary);
+}
+
+/* Chữ nội dung */
+.push-notification-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.push-notification-title {
+    font-family: var(--font-title);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.push-notification-message {
+    font-family: var(--font-text);
+    font-size: 16px;
+    color: var(--color-text-secondary);
+    line-height: 1.25;
+}
+
+/* Nút X đóng thông báo */
+.push-notification-close-btn {
+    margin-top: -6px;
+    margin-right: -8px;
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: color 0.33s ease;
+}
+
+.push-notification-close-btn:hover {
+    color: var(--color-text);
+}
+
+/* Thanh thời gian đếm ngược */
+.push-notification-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    width: 100%;
+    background-color: rgb(from var(--color-text) r g b / 0.11);
+}
+
+.push-notification-progress-bar {
+    height: 100%;
+    width: 100%;
+    transform-origin: left;
+}
+
+.push-notification-toast.success .push-notification-progress-bar {
+    background-color: var(--color-success);
+}
+.push-notification-toast.error .push-notification-progress-bar {
+    background-color: var(--color-error);
+}
+.push-notification-toast.warning .push-notification-progress-bar {
+    background-color: var(--color-warning);
+}
+.push-notification-toast.info .push-notification-progress-bar {
+    background-color: var(--color-primary);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+}

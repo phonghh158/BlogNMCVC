@@ -36,6 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/",
+                                "/about-me",
+                                "/404",
                                 "/authentication",
                                 "/register",
                                 "/auth/**",
